@@ -7,6 +7,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -31,6 +33,12 @@ public class User {
     private UserRole role;
     @Column
     private String modules;
+    @Column
+    private String confirmationToken;
+    @Column
+    private boolean confirmed;
+    @Column
+    private Timestamp expirationDate;
 
     @Override
     public final boolean equals(Object o) {
@@ -46,5 +54,13 @@ public class User {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public boolean isTokenValid(String token) {
+        return token.equals(confirmationToken);
+    }
+
+    public boolean isTokenNotExpired() {
+        return expirationDate.after(Timestamp.valueOf(LocalDateTime.now()));
     }
 }

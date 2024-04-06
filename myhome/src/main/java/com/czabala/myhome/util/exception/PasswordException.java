@@ -1,4 +1,4 @@
 package com.czabala.myhome.util.exception;
 
-public class PasswordException {
+public class PasswordException extends RuntimeException {
 }
