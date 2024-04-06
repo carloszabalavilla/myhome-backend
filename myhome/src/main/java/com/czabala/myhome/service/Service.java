@@ -6,7 +6,7 @@ public interface Service<T> {
     Set<T> findAll();
     T findById(long id);
     T add(T t);
-    T modify(long id, T t);
-    void delete(long id);
 
+    T update(T t);
+    void delete(long id);
 }
