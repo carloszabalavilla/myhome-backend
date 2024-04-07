@@ -1,6 +1,6 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.service.UserService;
+import com.czabala.myhome.service.database.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

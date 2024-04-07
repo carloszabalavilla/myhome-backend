@@ -1,9 +1,11 @@
-package com.czabala.myhome.service;
+package com.czabala.myhome.service.database;
 
 import com.czabala.myhome.domain.model.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.model.enums.UserRole;
 import com.czabala.myhome.domain.repository.UserRepository;
+import com.czabala.myhome.service.EmailService;
+import com.czabala.myhome.service.EmailServiceImpl;
 import com.czabala.myhome.util.exception.TokenValidationException;
 import com.czabala.myhome.util.exception.UnableToDeleteResource;
 import com.czabala.myhome.util.security.TokenGenerator;
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> findByRole(UserRole role) {
-        return userRepository.findByRole(role);
+        return userRepository.findByUserRole(role);
     }
 
     @Override
@@ -85,7 +87,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setPassword(userDTO.getPassword());
-        user.setRole(userDTO.getRole());
+        user.setUserRole(userDTO.getRole());
         user.setModules(userDTO.getModules());
         return user;
     }
@@ -93,7 +95,7 @@ public class UserServiceImpl implements UserService {
     private void registerUser(User user) {
         String token = tokenGenerator.generateToken();
         user.setConfirmationToken(token);
-        user.setExpirationDate(tokenGenerator.generateExpirationDate());
+        user.setTokenExpirationDate(tokenGenerator.generateExpirationDate());
         emailService.sendConfirmationMessage(user.getEmail(), token);
     }
 

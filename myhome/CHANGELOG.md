@@ -5,6 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For the sintaxis: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
+## [0.0.5] - 2024-04-08
+
+### Added
+
+- New fields to Users and some changes.
+- Database Initializer is added.
+- Password encoder is added.
+Still not all endpoints are tested. There is a problem with some endpoint's security.
+It is necessary to finish userDTO fields and some features as testing endpoints and making a registration confirmation email.
+Will be created an issue with the tasks to do.
+
 ## [0.0.4] - 2024-04-07
 
 ### Added
@@ -21,7 +32,7 @@ For the sintaxis: [File.md sintaxis](https://docs.github.com/es/get-started/writ
 - Email sender and user confirmation email are added.
 - New application properties are added.
 - New dependency added to the project.
-All endpoints aren't still tested. There is a problem with some endpoints security.
+All endpoints aren't still tested. There is a problem with some endpoint's security.
 It is necessary to fix the security problem and test all endpoints.
 Add the collection of requests to the parent folder of the repository.
 

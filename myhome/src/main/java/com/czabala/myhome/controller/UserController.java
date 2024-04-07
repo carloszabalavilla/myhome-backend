@@ -3,7 +3,7 @@ package com.czabala.myhome.controller;
 import com.czabala.myhome.domain.model.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.model.enums.UserRole;
-import com.czabala.myhome.service.UserService;
+import com.czabala.myhome.service.database.UserService;
 import com.czabala.myhome.util.exception.InvalidEmailException;
 import com.czabala.myhome.util.validator.EmailValidator;
 import org.springframework.http.ResponseEntity;
