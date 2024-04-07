@@ -1,4 +1,4 @@
-package com.czabala.myhome.service;
+package com.czabala.myhome.service.database;
 
 import com.czabala.myhome.domain.model.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;

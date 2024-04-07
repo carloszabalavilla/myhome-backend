@@ -1,8 +1,6 @@
 package com.czabala.myhome.domain.model.enums;
 
-public enum UserRole {
+public enum FamilyRole {
     USER,
-    ADMIN,
-    MODD,
-    SUPERPADM
+    ADMIN
 }

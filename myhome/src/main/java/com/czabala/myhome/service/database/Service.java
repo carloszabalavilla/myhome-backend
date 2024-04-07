@@ -1,4 +1,4 @@
-package com.czabala.myhome.service;
+package com.czabala.myhome.service.database;
 
 import java.util.Set;
 
