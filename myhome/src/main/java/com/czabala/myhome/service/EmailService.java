@@ -1,7 +1,9 @@
 package com.czabala.myhome.service;
 
 import jakarta.mail.MessagingException;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface EmailService {
     void sendMessage(String to, String subject, String text);
 

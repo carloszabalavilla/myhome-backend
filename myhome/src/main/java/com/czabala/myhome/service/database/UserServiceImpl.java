@@ -5,7 +5,6 @@ import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.model.enums.UserRole;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.service.EmailService;
-import com.czabala.myhome.service.EmailServiceImpl;
 import com.czabala.myhome.util.exception.TokenValidationException;
 import com.czabala.myhome.util.exception.UnableToDeleteResource;
 import com.czabala.myhome.util.security.TokenGenerator;
@@ -20,10 +19,10 @@ public class UserServiceImpl implements UserService {
     private final TokenGenerator tokenGenerator;
     private final EmailService emailService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, EmailService emailService) {
         this.userRepository = userRepository;
+        this.emailService = emailService;
         this.tokenGenerator = new TokenGenerator();
-        this.emailService = new EmailServiceImpl();
     }
 
     @Override
