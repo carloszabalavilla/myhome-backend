@@ -2,10 +2,8 @@ package com.czabala.myhome.controller;
 
 import com.czabala.myhome.domain.model.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
-import com.czabala.myhome.domain.model.enums.UserRole;
 import com.czabala.myhome.service.database.UserService;
 import com.czabala.myhome.util.exception.InvalidEmailException;
-import com.czabala.myhome.util.validator.EmailValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,85 +19,79 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<?> findAllUsers() {
-        Set<User> users = userService.findAll();
-        if (users == null || users.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(users);
-        }
-    }
-
-    @GetMapping("/users/userid")
-    public ResponseEntity<?> findUserById(@RequestParam(value = "id") String id) {
         try {
-            long idL = Long.parseLong(id);
-            User user = userService.findById(idL);
-            if (user.getId() == 0) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.ok(user);
-            }
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body("Error al buscar usuario: ID no válido");
+            Set<User> users = userService.findAll();
+            return ResponseEntity.ok(users);
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/users/useremail")
+    @GetMapping("/users/user-id")
+    public ResponseEntity<?> findUserById(@RequestParam(value = "id") long id) {
+        try {
+            User user = userService.findById(id);
+            return ResponseEntity.ok(user);
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/users/user-email")
     public ResponseEntity<?> findUserByEmail(@RequestParam(value = "email") String email) {
         try {
-            EmailValidator.validateEmail(email);
             User user = userService.findByEmail(email);
             return ResponseEntity.ok(user);
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
         } catch (InvalidEmailException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @GetMapping("/users/userrole")
+    @GetMapping("/users/user-role")
     public ResponseEntity<?> findUserByRole(@RequestParam(value = "role") String role) {
         try {
-            UserRole userRole = UserRole.valueOf(role);
-            Set<User> users = userService.findByRole(userRole);
-            if (users == null || users.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.ok(users);
-            }
+            Set<User> users = userService.findByRole(role);
+            return ResponseEntity.ok(users);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Error al buscar usuario: Rol no válido");
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping("/users/user")
-    public ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
-        if (userDTO == null || userDTO.hasNotNullOrEmpty()) {
-            return ResponseEntity.badRequest().body("Error al crear usuario: Datos nulos");
-        } else {
-            User newUser = userService.mapToUser(userDTO);
-            if (userService.add(newUser) == null) {
-                return ResponseEntity.badRequest().body("Error al crear usuario: Email ya registrado");
-            }
-            return ResponseEntity.ok("Usuario creado exitosamente");
+    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
+        try {
+            User user = userService.add(userDTO);
+            return ResponseEntity.ok(user);
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.badRequest().body("Error al crear usuario: Campos no válidos");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Error al crear usuario: El usuario ya existe");
         }
     }
 
     @PutMapping("/users/user")
-    public ResponseEntity<String> updateUser(@RequestBody UserDTO userDTO) {
-        User user = userService.mapToUser(userDTO);
-        if (userService.update(user) == null) {
-            return ResponseEntity.badRequest().body("Error al actualizar usuario: El usuario no existe");
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
+        try {
+            userService.update(userDTO);
+            return ResponseEntity.ok("Usuario actualizado exitosamente");
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.badRequest().body("Error al actualizar usuario: Campos no válidos");
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok("Usuario actualizado exitosamente");
     }
 
     @DeleteMapping("/users/user")
-    public ResponseEntity<String> deleteUser(@RequestParam(value = "id") String id) {
+    public ResponseEntity<String> deleteUser(@RequestParam(value = "id") long id) {
         try {
-            long idL = Long.parseLong(id);
-            userService.delete(idL);
+            userService.delete(id);
             return ResponseEntity.ok("Usuario eliminado exitosamente");
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body("Error al eliminar usuario: ID no válido");
+        } catch (NullPointerException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

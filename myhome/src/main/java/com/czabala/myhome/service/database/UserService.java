@@ -2,16 +2,11 @@ package com.czabala.myhome.service.database;
 
 import com.czabala.myhome.domain.model.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
-import com.czabala.myhome.domain.model.enums.UserRole;
 
 import java.util.Set;
 
-public interface UserService extends Service<User> {
+public interface UserService extends Service<User,UserDTO> {
     User findByEmail(String email);
-
-    Set<User> findByRole(UserRole role);
-    User mapToUser(UserDTO userDTO);
-
+    Set<User> findByRole(String role);
     void processConfirmationToken(String token);
-
 }

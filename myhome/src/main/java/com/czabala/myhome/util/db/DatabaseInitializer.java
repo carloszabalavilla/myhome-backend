@@ -1,6 +1,5 @@
 package com.czabala.myhome.util.db;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,7 @@ public class DatabaseInitializer {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @PostConstruct
+    //@PostConstruct
     public void loadData() {
         String sqlScript = "INSERT INTO user (name, surname, email, password, user_role, modules, confirmation_token, confirmed, token_expiration_date, fee, monthlies_amount, monthlies_paid, payment_method, payment_details, payment_token, family_role, address, birth_date, phone_number, avatar, newsletter, family_group_id)\n" +
                 "VALUES\n" +
