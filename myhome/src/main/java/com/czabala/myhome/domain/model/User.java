@@ -1,12 +1,13 @@
 package com.czabala.myhome.domain.model;
 
-import com.czabala.myhome.domain.model.enums.UserRole;
+import com.czabala.myhome.domain.model.enums.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -23,22 +24,51 @@ public class User {
     @Column(name = "id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private long id;
-    @Column
+    @Column(nullable = false)
     private String name;
-    @Column
+    @Column(nullable = false)
+    private String surname;
+    @Column(unique = true)
     private String email;
-    @Column
+    @Column(nullable = false)
     private String password;
-    @Column
-    private UserRole role;
+    @Column(nullable = false)
+    private UserRole userRole;
     @Column
     private String modules;
-    @Column
+    @Column(nullable = false)
     private String confirmationToken;
-    @Column
+    @Column(nullable = false)
     private boolean confirmed;
+    @Column(nullable = false)
+    private Timestamp tokenExpirationDate;
+    @Column(nullable = false)
+    private Fee fee;
     @Column
-    private Timestamp expirationDate;
+    private int monthliesAmount;
+    @Column
+    private int monthliesPaid;
+    @Column
+    private PaymentMethod paymentMethod;
+    @Column
+    private String paymentDetails;
+    @Column
+    private String paymentToken;
+    @Column
+    private FamilyRole familyRole;
+    @Column
+    private String address;
+    @Column(nullable = false)
+    private Date birthDate;
+    @Column
+    private String phoneNumber;
+    @Column
+    private String avatar;
+    @Column(nullable = false)
+    private Newsletter newsletter;
+    @ManyToOne
+    private FamilyGroup familyGroup;
+
 
     @Override
     public final boolean equals(Object o) {
@@ -61,6 +91,11 @@ public class User {
     }
 
     public boolean isTokenNotExpired() {
-        return expirationDate.after(Timestamp.valueOf(LocalDateTime.now()));
+        return tokenExpirationDate.after(Timestamp.valueOf(LocalDateTime.now()));
+    }
+
+    public boolean hasNotNullOrEmpty() {
+        return name == null && surname == null && email == null && password == null && userRole == null &&
+                name.isEmpty() && surname.isEmpty() && email.isEmpty() && password.isEmpty();
     }
 }

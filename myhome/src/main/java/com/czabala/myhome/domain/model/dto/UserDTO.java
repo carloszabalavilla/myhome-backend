@@ -1,36 +1,39 @@
 package com.czabala.myhome.domain.model.dto;
 
-import com.czabala.myhome.domain.model.enums.UserRole;
+import com.czabala.myhome.domain.model.FamilyGroup;
+import com.czabala.myhome.domain.model.enums.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
+    private long id;
     private String name;
+    private String surname;
     private String email;
     private String password;
-    private UserRole role;
+    private UserRole userRole;
     private String modules;
-
-    public UserDTO(String name, String email, String password, String role, String modules) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        setRole(role);
-        this.modules = modules;
-    }
-
-    public void setRole(String role) {
-        if (role.equals("ADMIN")) {
-            this.role = UserRole.ADMIN;
-        } else {
-            this.role = UserRole.USER;
-        }
-    }
-
-    public boolean hasNotNullOrEmpty() {
-        return name != null && email != null && password != null && role != null &&
-                !name.isEmpty() && !email.isEmpty() && !password.isEmpty();
-    }
+    private String confirmationToken;
+    private boolean confirmed;
+    private Timestamp tokenExpirationDate;
+    private Fee fee;
+    private int monthliesAmount;
+    private int monthliesPaid;
+    private PaymentMethod paymentMethod;
+    private String paymentDetails;
+    private String paymentToken;
+    private FamilyRole familyRole;
+    private String address;
+    private Date birthDate;
+    private String phoneNumber;
+    private String avatar;
+    private Newsletter newsletter;
+    private FamilyGroup familyGroup;
 }

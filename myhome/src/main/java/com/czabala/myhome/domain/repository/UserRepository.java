@@ -12,7 +12,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Set<User> findAll();
 
     User findById(long id);
-    Set<User> findByRole(UserRole role);
+    Set<User> findByUserRole(UserRole userRole);
 
     User findByEmail(String email);
 
