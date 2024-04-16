@@ -5,12 +5,13 @@ import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.model.enums.UserRole;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.service.EmailService;
+import com.czabala.myhome.util.exception.InvalidEmailException;
 import com.czabala.myhome.util.exception.TokenValidationException;
-import com.czabala.myhome.util.exception.UnableToDeleteResource;
 import com.czabala.myhome.util.security.TokenGenerator;
+import com.czabala.myhome.util.user.UserMapper;
+import com.czabala.myhome.util.validator.EmailValidator;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Set;
 
 @Service
@@ -26,69 +27,62 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> findAll() {
-        try {
-            return userRepository.findAll();
-        } catch (NullPointerException e) {
-            return Collections.emptySet();
+    public Set<User> findAll() throws NullPointerException {
+        if (userRepository.findAll().isEmpty()) {
+            throw new NullPointerException("No hay usuarios registrados");
         }
+            return userRepository.findAll();
     }
 
     @Override
-    public User findById(long id) {
+    public User findById(long id) throws NullPointerException {
         if (userRepository.findById(id) == null) {
-            User user = new User();
-            user.setId(0);
-            return user;
+            throw new NullPointerException("Usuario no encontrado");
         }
         return userRepository.findById(id);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public User findByEmail(String email) throws NullPointerException, InvalidEmailException {
+        EmailValidator.validateEmail(email);
+        if (userRepository.findByEmail(email) == null) {
+            throw new NullPointerException("Usuario no encontrado");
+        }
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public Set<User> findByRole(UserRole role) {
-        return userRepository.findByUserRole(role);
+    public Set<User> findByRole(String role) throws NullPointerException {
+        UserRole userRole = UserRole.valueOf(role);
+        Set<User> users;
+        if ((users = userRepository.findByUserRole(userRole)) == null || users.isEmpty()) {
+            throw new NullPointerException("No hay usuarios con el rol " + role);
+        }
+        return users;
     }
 
     @Override
-    public User add(User user) {
+    public User add(UserDTO userDTO) throws IllegalAccessException {
+        User user = new User();
+        UserMapper.copyNonNullFields(userDTO, user);
         if (userRepository.findByEmail(user.getEmail()) != null) {
-            return null;
+            throw new IllegalArgumentException("Error al añadir usuario: Email ya registrado");
         }
-        registerUser(user);
+        //registerUser(user);
         return userRepository.save(user);
     }
 
     @Override
-    public User update(User user) {
-        if (userRepository.findByEmail(user.getEmail()) == null) {
-            return null;
-        }
+    public User update(UserDTO userDTO) throws IllegalAccessException, NullPointerException {
+        User user = findById(userDTO.getId());
+        UserMapper.copyNonNullFields(userDTO, user);
         return userRepository.save(user);
     }
 
     @Override
-    public void delete(long id) {
-        try {
+    public void delete(long id) throws NullPointerException {
             userRepository.findById(id);
             userRepository.deleteById(id);
-        } catch (NullPointerException ignored) {
-            throw new UnableToDeleteResource("Error al eliminar usuario: ID no válido");
-        }
-    }
-
-    @Override
-    public User mapToUser(UserDTO userDTO) {
-        User user = new User();
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-        user.setUserRole(userDTO.getRole());
-        user.setModules(userDTO.getModules());
-        return user;
     }
 
     private void registerUser(User user) {

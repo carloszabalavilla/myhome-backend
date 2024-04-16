@@ -93,4 +93,9 @@ public class User {
     public boolean isTokenNotExpired() {
         return tokenExpirationDate.after(Timestamp.valueOf(LocalDateTime.now()));
     }
+
+    public boolean hasNotNullOrEmpty() {
+        return name == null && surname == null && email == null && password == null && userRole == null &&
+                name.isEmpty() && surname.isEmpty() && email.isEmpty() && password.isEmpty();
+    }
 }
