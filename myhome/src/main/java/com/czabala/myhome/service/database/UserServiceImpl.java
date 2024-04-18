@@ -1,14 +1,16 @@
 package com.czabala.myhome.service.database;
 
-import com.czabala.myhome.domain.model.User;
+import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
-import com.czabala.myhome.domain.model.enums.UserRole;
+import com.czabala.myhome.domain.model.enums.user.UserRole;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.service.EmailService;
+import com.czabala.myhome.util.exception.ApiException;
 import com.czabala.myhome.util.exception.InvalidEmailException;
 import com.czabala.myhome.util.exception.TokenValidationException;
+import com.czabala.myhome.util.exception.UserNotFoundException;
 import com.czabala.myhome.util.security.TokenGenerator;
-import com.czabala.myhome.util.user.UserMapper;
+import com.czabala.myhome.util.user.MapperDTOtoDAO;
 import com.czabala.myhome.util.validator.EmailValidator;
 import org.springframework.stereotype.Service;
 
@@ -27,62 +29,72 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> findAll() throws NullPointerException {
-        if (userRepository.findAll().isEmpty()) {
-            throw new NullPointerException("No hay usuarios registrados");
+    public Set<User> findAll() {
+        Set<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new UserNotFoundException("No hay usuarios registrados");
         }
-            return userRepository.findAll();
+        return users;
     }
 
+
     @Override
-    public User findById(long id) throws NullPointerException {
-        if (userRepository.findById(id) == null) {
-            throw new NullPointerException("Usuario no encontrado");
+    public User findById(long id) {
+        User user = userRepository.findById(id);
+        if (user == null) {
+            throw new UserNotFoundException("Usuario no encontrado.");
         }
         return userRepository.findById(id);
     }
 
     @Override
-    public User findByEmail(String email) throws NullPointerException, InvalidEmailException {
+    public User findByEmail(String email) {
         EmailValidator.validateEmail(email);
-        if (userRepository.findByEmail(email) == null) {
-            throw new NullPointerException("Usuario no encontrado");
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("Usuario no encontrado.");
         }
         return userRepository.findByEmail(email);
     }
 
     @Override
-    public Set<User> findByRole(String role) throws NullPointerException {
+    public Set<User> findByRole(String role) {
         UserRole userRole = UserRole.valueOf(role);
-        Set<User> users;
-        if ((users = userRepository.findByUserRole(userRole)) == null || users.isEmpty()) {
-            throw new NullPointerException("No hay usuarios con el rol " + role);
+        Set<User> users = userRepository.findByUserRole(userRole);
+        if (users == null || users.isEmpty()) {
+            throw new UserNotFoundException("No hay usuarios con el rol " + role + " registrados.");
         }
         return users;
     }
 
     @Override
-    public User add(UserDTO userDTO) throws IllegalAccessException {
+    public User add(UserDTO userDTO) {
         User user = new User();
-        UserMapper.copyNonNullFields(userDTO, user);
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new IllegalArgumentException("Error al añadir usuario: Email ya registrado");
+        try {
+            MapperDTOtoDAO.copyNonNullFields(userDTO, user);
+            findByEmail(user.getEmail());
+            throw new InvalidEmailException("Error al añadir usuario: Email ya registrado");
+        } catch (UserNotFoundException e) {
+            //registerUser(user)
+            return userRepository.save(user);
+        } catch (ApiException e) {
+            throw new ApiException("Error al añadir usuario: " + e.getMessage());
         }
-        //registerUser(user);
-        return userRepository.save(user);
     }
 
     @Override
-    public User update(UserDTO userDTO) throws IllegalAccessException, NullPointerException {
+    public User update(UserDTO userDTO) {
         User user = findById(userDTO.getId());
-        UserMapper.copyNonNullFields(userDTO, user);
+        MapperDTOtoDAO.copyNonNullFields(userDTO, user);
         return userRepository.save(user);
     }
 
     @Override
-    public void delete(long id) throws NullPointerException {
-            userRepository.findById(id);
-            userRepository.deleteById(id);
+    public void delete(long id) {
+        if (userRepository.findById(id) == null) {
+            throw new UserNotFoundException("Usuario no encontrado.");
+        }
+        userRepository.deleteById(id);
     }
 
     private void registerUser(User user) {
@@ -94,7 +106,6 @@ public class UserServiceImpl implements UserService {
 
     public void processConfirmationToken(String token) {
         User user = userRepository.findByConfirmationToken(token);
-
         if (user != null && user.isTokenValid(token) && user.isTokenNotExpired()) {
             user.setConfirmed(true);
             userRepository.save(user);

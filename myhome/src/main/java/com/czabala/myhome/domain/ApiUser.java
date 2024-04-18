@@ -1,6 +1,6 @@
-package com.czabala.myhome.domain.model;
+package com.czabala.myhome.domain;
 
-import com.czabala.myhome.domain.model.enums.AccountStatus;
+import com.czabala.myhome.domain.model.enums.user.AccountStatus;
 import com.nimbusds.jwt.JWT;
 
 import java.sql.Date;

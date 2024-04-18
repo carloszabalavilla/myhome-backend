@@ -1,16 +1,15 @@
-package com.czabala.myhome.domain.model;
+package com.czabala.myhome.domain.model.dao;
 
-import com.czabala.myhome.domain.model.enums.*;
+import com.czabala.myhome.domain.model.enums.user.*;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.type.SqlTypes;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,7 +21,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    @JdbcTypeCode(SqlTypes.BIGINT)
     private long id;
     @Column(nullable = false)
     private String name;
@@ -68,6 +66,8 @@ public class User {
     private Newsletter newsletter;
     @ManyToOne
     private FamilyGroup familyGroup;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Task> tasks;
 
 
     @Override

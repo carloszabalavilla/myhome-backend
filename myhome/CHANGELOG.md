@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 For the sintaxis: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
+## [0.0.6] - 2024-04-18
+
+### Added
+
+- New entity task added
+- Exception management added
+- User methods refactored
+- Task methods added
+Task endpoints are not tested yet. Create a new issue to test them.
+
 ## [0.0.5] - 2024-04-08
 
 ### Added

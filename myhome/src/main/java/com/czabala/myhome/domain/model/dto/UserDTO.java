@@ -1,7 +1,7 @@
 package com.czabala.myhome.domain.model.dto;
 
-import com.czabala.myhome.domain.model.FamilyGroup;
-import com.czabala.myhome.domain.model.enums.*;
+import com.czabala.myhome.domain.model.dao.FamilyGroup;
+import com.czabala.myhome.domain.model.enums.user.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
