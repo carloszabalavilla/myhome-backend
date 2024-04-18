@@ -13,6 +13,16 @@ For the syntax: [File.md sintaxis](https://docs.github.com/es/get-started/writin
 - Tested user endpoints.
 - Controller, service and user well-formed built
 
+## [0.0.6] - 2024-04-18
+
+### Added
+
+- New entity task added
+- Exception management added
+- User methods refactored
+- Task methods added
+Task endpoints are not tested yet. Create a new issue to test them.
+
 ## [0.0.5] - 2024-04-08
 
 ### Added

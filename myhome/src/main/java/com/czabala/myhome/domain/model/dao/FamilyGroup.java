@@ -1,4 +1,4 @@
-package com.czabala.myhome.domain.model;
+package com.czabala.myhome.domain.model.dao;
 
 import jakarta.persistence.*;
 import lombok.*;

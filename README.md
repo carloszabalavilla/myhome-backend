@@ -1,9 +1,12 @@
-# myhome-backend
+# MyHome-backend
  Repository for myhome backend development
  Parent repository: https://github.com/carloszabalavilla/myhome
-## Parameters
+## Credentials
 mysql database credentials:
  - user: czabdev
  - password: rukia1225dev
+virtual desktop conn
+ - user: Develop
+ - rukia1225dev
 ## Developers involved
 czabdev (Carlos Zabala)
