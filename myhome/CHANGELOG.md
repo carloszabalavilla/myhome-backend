@@ -13,6 +13,14 @@ For the syntax: [File.md sintaxis](https://docs.github.com/es/get-started/writin
 - Tested user endpoints.
 - Controller, service and user well-formed built
 
+## [0.1.0] - 2024-04-24
+
+### Added
+- Integrated with client app
+- New entity task added
+- CorsConfig added
+- Auth and user Login tested
+
 ## [0.0.6] - 2024-04-18
 
 ### Added

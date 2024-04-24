@@ -12,6 +12,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Object> handleTaskNotFoundException(TaskNotFoundException ex) {
+        return ResponseEntity.notFound().build();
+    }
+
     @ExceptionHandler(InvalidEmailException.class)
     public ResponseEntity<Object> handleInvalidEmailException(InvalidEmailException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
@@ -25,5 +30,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TokenValidationException.class)
     public ResponseEntity<Object> handleTokenValidationException(TokenValidationException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AuthErrorException.class)
+    public ResponseEntity<Object> handleAuthErrorException(AuthErrorException ex) {
+        return ResponseEntity.status(401).body(ex.getMessage());
     }
 }

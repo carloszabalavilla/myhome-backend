@@ -5,10 +5,7 @@ import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.model.enums.user.UserRole;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.service.EmailService;
-import com.czabala.myhome.util.exception.ApiException;
-import com.czabala.myhome.util.exception.InvalidEmailException;
-import com.czabala.myhome.util.exception.TokenValidationException;
-import com.czabala.myhome.util.exception.UserNotFoundException;
+import com.czabala.myhome.util.exception.*;
 import com.czabala.myhome.util.security.TokenGenerator;
 import com.czabala.myhome.util.user.MapperDTOtoDAO;
 import com.czabala.myhome.util.validator.EmailValidator;
@@ -95,6 +92,18 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("Usuario no encontrado.");
         }
         userRepository.deleteById(id);
+    }
+
+    public User login(UserDTO userDTO) {
+        User user = userRepository.findByEmail(userDTO.getEmail());
+        if (user == null) {
+            throw new UserNotFoundException("Usuario no encontrado o contraseña incorrecta");
+        } else if (!user.getPassword().equals(userDTO.getPassword())) {
+            throw new AuthErrorException("Contraseña incorrecta");
+        } else if (!user.isConfirmed()) {
+            throw new TokenValidationException("Usuario no confirmado");
+        }
+        return user;
     }
 
     private void registerUser(User user) {
