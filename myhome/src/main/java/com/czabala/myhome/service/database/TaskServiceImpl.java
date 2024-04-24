@@ -1,6 +1,7 @@
 package com.czabala.myhome.service.database;
 
 import com.czabala.myhome.domain.model.dao.Task;
+import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.TaskDTO;
 import com.czabala.myhome.domain.repository.TaskRepository;
 import com.czabala.myhome.util.exception.TaskNotFoundException;
@@ -37,8 +38,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Set<Task> findByUserId(long userId) {
-        Set<Task> tasks = taskRepository.findByUserId(userId);
+    public Set<Task> findByUser(User user) {
+        Set<Task> tasks = taskRepository.findByUser(user);
         if (tasks.isEmpty()) {
             throw new TaskNotFoundException("No hay tareas registradas");
         }
@@ -55,7 +56,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task update(TaskDTO taskDTO) {
         Task task = taskRepository.findById(taskDTO.getId());
-        if(task == null) {
+        if (task == null) {
             throw new TaskNotFoundException("Tarea no encontrada.");
         }
         MapperDTOtoDAO.copyNonNullFields(taskDTO, task);
@@ -65,7 +66,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(long id) {
         Task task = taskRepository.findById(id);
-        if(task == null) {
+        if (task == null) {
             throw new TaskNotFoundException("Tarea no encontrada.");
         }
         taskRepository.delete(task);

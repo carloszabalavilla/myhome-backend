@@ -9,4 +9,5 @@ public interface UserService extends Service<User,UserDTO> {
     User findByEmail(String email);
     Set<User> findByRole(String role);
     void processConfirmationToken(String token);
+    User login(UserDTO userDTO);
 }
