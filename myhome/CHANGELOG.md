@@ -4,27 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-For the
-sintaxis: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
-
-## [0.1.0] - 2024-04-24
-
-### Added
-
-- Integrated with client app
-- New entity task added
-- CorsConfig added
-- Auth and user Login tested
-
-## [0.0.6] - 2024-04-18
-
-### Added
-
-- New entity task added
-- Exception management added
-- User methods refactored
-- Task methods added
-  Task endpoints are not tested yet. Create a new issue to test them.
+For the syntax: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 ## [0.1.0] - 2024-04-24
 
@@ -34,7 +14,7 @@ sintaxis: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-g
 - CorsConfig added
 - Auth and user Login tested
 
-## [0.0.6] - 2024-04-18
+## [0.0.7] - 2024-04-18
 
 ### Added
 
@@ -43,6 +23,14 @@ sintaxis: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-g
 - User methods refactored
 - Task methods added
 Task endpoints are not tested yet. Create a new issue to test them.
+
+## [0.0.6] - 2024-04-16
+
+### Fixed
+
+- Access denied for endpoints fixed
+- Tested user endpoints.
+- Controller, service and user well-formed built
 
 ## [0.0.5] - 2024-04-08
 
