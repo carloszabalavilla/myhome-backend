@@ -1,9 +1,8 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.domain.model.User;
+import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.service.database.UserService;
-import com.czabala.myhome.util.exception.InvalidEmailException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,86 +11,56 @@ import java.util.Set;
 @RestController
 public class UserController {
     private final UserService userService;
-
+    private final String endpoint = "/user";
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping(endpoint)
     public ResponseEntity<?> findAllUsers() {
-        try {
-            Set<User> users = userService.findAll();
-            return ResponseEntity.ok(users);
-        } catch (NullPointerException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Set<User> users = userService.findAll();
+        return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/users/user-id")
-    public ResponseEntity<?> findUserById(@RequestParam(value = "id") long id) {
-        try {
-            User user = userService.findById(id);
-            return ResponseEntity.ok(user);
-        } catch (NullPointerException e) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping(endpoint+"/id")
+    public ResponseEntity<?> findUserById(@RequestParam(value = "id") long id, @RequestParam(value = "token") String token) {
+        User user = userService.findById(id);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/users/user-email")
+    @GetMapping(endpoint+"/email")
     public ResponseEntity<?> findUserByEmail(@RequestParam(value = "email") String email) {
-        try {
-            User user = userService.findByEmail(email);
-            return ResponseEntity.ok(user);
-        } catch (NullPointerException e) {
-            return ResponseEntity.notFound().build();
-        } catch (InvalidEmailException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        User user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/users/user-role")
+    @GetMapping(endpoint+"/role")
     public ResponseEntity<?> findUserByRole(@RequestParam(value = "role") String role) {
-        try {
-            Set<User> users = userService.findByRole(role);
-            return ResponseEntity.ok(users);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Error al buscar usuario: Rol no válido");
-        } catch (NullPointerException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Set<User> users = userService.findByRole(role);
+        return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/users/user")
+    @GetMapping(endpoint+"/token")
+    public ResponseEntity<?> findUserByToken(@RequestParam(value = "token") String token) {
+        User user = userService.findByToken(token);
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping(endpoint)
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
-        try {
-            User user = userService.add(userDTO);
-            return ResponseEntity.ok(user);
-        } catch (IllegalAccessException e) {
-            return ResponseEntity.badRequest().body("Error al crear usuario: Campos no válidos");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Error al crear usuario: El usuario ya existe");
-        }
+        User user = userService.add(userDTO);
+        return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/users/user")
+    @PutMapping(endpoint)
     public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
-        try {
-            userService.update(userDTO);
-            return ResponseEntity.ok("Usuario actualizado exitosamente");
-        } catch (IllegalAccessException e) {
-            return ResponseEntity.badRequest().body("Error al actualizar usuario: Campos no válidos");
-        } catch (NullPointerException e) {
-            return ResponseEntity.notFound().build();
-        }
+        userService.update(userDTO);
+        return ResponseEntity.ok("Usuario actualizado exitosamente");
     }
 
-    @DeleteMapping("/users/user")
+    @DeleteMapping(endpoint)
     public ResponseEntity<String> deleteUser(@RequestParam(value = "id") long id) {
-        try {
-            userService.delete(id);
-            return ResponseEntity.ok("Usuario eliminado exitosamente");
-        } catch (NullPointerException e) {
-            return ResponseEntity.notFound().build();
-        }
+        userService.delete(id);
+        return ResponseEntity.ok("Usuario eliminado exitosamente");
     }
 }

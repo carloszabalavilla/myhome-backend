@@ -14,7 +14,8 @@ import java.io.File;
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
-    
+    private final String urlBase = "localhost:3000";
+
     public EmailServiceImpl(JavaMailSender emailSender) {
         this.emailSender = emailSender;
     }
@@ -55,7 +56,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendConfirmationMessage(String to, String token) {
         String subject = "Confirmación de correo electrónico";
-        String confirmationUrl = "http://myhome.es/confirmEmail?token=" + token;
+        String confirmationUrl = urlBase + "/confirmEmail?token=" + token;
 
         String text = "Por favor, haz clic en el siguiente enlace para confirmar tu dirección de correo electrónico: \n\n"
                 + confirmationUrl;
@@ -65,6 +66,21 @@ public class EmailServiceImpl implements EmailService {
         message.setSubject(subject);
         message.setText(text);
 
+        emailSender.send(message);
+    }
+
+    @Override
+    public void sendRecoveryMessage(String email, String token) {
+        String subject = "Recuperación de contraseña";
+        String recoveryUrl = urlBase + "/recoveryPassword?token=" + token;
+
+        String text = "Por favor, haz clic en el siguiente enlace para recuperar tu contraseña: \n\n"
+                + recoveryUrl;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(subject);
+        message.setText(text);
         emailSender.send(message);
     }
 }
