@@ -5,9 +5,12 @@ import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.model.enums.user.UserRole;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.service.EmailService;
-import com.czabala.myhome.util.exception.*;
+import com.czabala.myhome.util.exception.AuthErrorException;
+import com.czabala.myhome.util.exception.InvalidEmailException;
+import com.czabala.myhome.util.exception.TokenValidationException;
+import com.czabala.myhome.util.exception.UserNotFoundException;
+import com.czabala.myhome.util.mapper.MapperDTOtoDAO;
 import com.czabala.myhome.util.security.TokenGenerator;
-import com.czabala.myhome.util.user.MapperDTOtoDAO;
 import com.czabala.myhome.util.validator.EmailValidator;
 import org.springframework.stereotype.Service;
 
@@ -65,23 +68,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User add(UserDTO userDTO) {
-        User user = new User();
-        try {
-            MapperDTOtoDAO.copyNonNullFields(userDTO, user);
-            findByEmail(user.getEmail());
-            throw new InvalidEmailException("Error al añadir usuario: Email ya registrado");
-        } catch (UserNotFoundException e) {
-            //registerUser(user)
-            return userRepository.save(user);
-        } catch (ApiException e) {
-            throw new ApiException("Error al añadir usuario: " + e.getMessage());
+    public User findByToken(String token) {
+        User user = userRepository.findByToken(token);
+        if (user == null) {
+            throw new UserNotFoundException("Usuario no encontrado.");
         }
+        return user;
+    }
+
+    @Override
+    public User add(UserDTO userDTO) {
+        User user = findByEmail(userDTO.getEmail());
+        if (user != null) {
+            throw new InvalidEmailException("Error al añadir usuario: Email ya registrado");
+        }
+        user = new User();
+        userDTO.registerUser();
+        MapperDTOtoDAO.copyNonNullFields(userDTO, user);
+        registerUser(user);
+        return userRepository.save(user);
     }
 
     @Override
     public User update(UserDTO userDTO) {
         User user = findById(userDTO.getId());
+        if (user == null) {
+            throw new UserNotFoundException("Usuario no encontrado.");
+        }
         MapperDTOtoDAO.copyNonNullFields(userDTO, user);
         return userRepository.save(user);
     }
@@ -106,20 +119,44 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    public void recoveryPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("Usuario no encontrado");
+        }
+        String token = tokenGenerator.generateToken();
+        user.setToken(token);
+        user.setTokenExpirationDate(tokenGenerator.generateExpirationDate());
+        emailService.sendRecoveryMessage(user.getEmail(), token);
+    }
+
+    @Override
+    public void changePassword(UserDTO userDTO) {
+        User user = userRepository.findByToken(userDTO.getToken());
+        if (user == null || !user.isTokenValid(userDTO.getToken()) || user.isTokenExpired()) {
+            throw new TokenValidationException("Token de confirmación no válido o expirado");
+        }
+        user.setPassword(userDTO.getPassword());
+        user.setToken(null);
+        user.setTokenExpirationDate(null);
+        userRepository.save(user);
+    }
+
     private void registerUser(User user) {
         String token = tokenGenerator.generateToken();
-        user.setConfirmationToken(token);
+        user.setToken(token);
         user.setTokenExpirationDate(tokenGenerator.generateExpirationDate());
         emailService.sendConfirmationMessage(user.getEmail(), token);
     }
 
     public void processConfirmationToken(String token) {
-        User user = userRepository.findByConfirmationToken(token);
-        if (user != null && user.isTokenValid(token) && user.isTokenNotExpired()) {
-            user.setConfirmed(true);
-            userRepository.save(user);
-        } else {
+        User user = userRepository.findByToken(token);
+        if (user == null || !user.isTokenValid(token) || user.isTokenExpired()) {
             throw new TokenValidationException("Token de confirmación no válido o expirado");
         }
+        user.setConfirmed(true);
+        user.setToken(null);
+        user.setTokenExpirationDate(null);
+        userRepository.save(user);
     }
 }

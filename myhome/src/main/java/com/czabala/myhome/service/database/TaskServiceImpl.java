@@ -5,7 +5,7 @@ import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.TaskDTO;
 import com.czabala.myhome.domain.repository.TaskRepository;
 import com.czabala.myhome.util.exception.TaskNotFoundException;
-import com.czabala.myhome.util.user.MapperDTOtoDAO;
+import com.czabala.myhome.util.mapper.MapperDTOtoDAO;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;

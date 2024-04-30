@@ -12,4 +12,6 @@ public interface EmailService {
     void sendMessageUsingTemplate(String to, String subject, String... templateModel);
 
     void sendConfirmationMessage(String to, String token);
+
+    void sendRecoveryMessage(String email, String token);
 }
