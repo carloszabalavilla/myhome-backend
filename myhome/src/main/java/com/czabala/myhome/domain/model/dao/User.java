@@ -2,18 +2,16 @@ package com.czabala.myhome.domain.model.dao;
 
 import com.czabala.myhome.domain.model.enums.user.*;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.Set;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "user")
@@ -31,14 +29,16 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
+    private String salt;
+    @Column(nullable = false)
     private UserRole userRole;
     @Column
     private String modules;
+    @Column
+    private String token;
     @Column(nullable = false)
-    private String confirmationToken;
-    @Column(nullable = false)
-    private boolean confirmed;
-    @Column(nullable = false)
+    private boolean isConfirmed;
+    @Column
     private Timestamp tokenExpirationDate;
     @Column(nullable = false)
     private Fee fee;
@@ -69,33 +69,19 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Task> tasks;
 
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        User user = (User) o;
-        return getId() != -1 && Objects.equals(getId(), user.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
     public boolean isTokenValid(String token) {
-        return token.equals(confirmationToken);
+        return this.token.equals(token);
     }
 
-    public boolean isTokenNotExpired() {
-        return tokenExpirationDate.after(Timestamp.valueOf(LocalDateTime.now()));
+    public boolean isTokenExpired() {
+        return !tokenExpirationDate.after(Timestamp.valueOf(LocalDateTime.now()));
     }
 
-    public boolean hasNotNullOrEmpty() {
-        return name == null && surname == null && email == null && password == null && userRole == null &&
-                name.isEmpty() && surname.isEmpty() && email.isEmpty() && password.isEmpty();
+    public boolean isPasswordCorrect(String password) {
+        return this.password.equals(password);
+    }
+
+    public boolean isEmailCorrect(String email) {
+        return this.email.equals(email);
     }
 }

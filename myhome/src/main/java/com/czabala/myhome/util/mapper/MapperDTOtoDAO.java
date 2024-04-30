@@ -1,4 +1,4 @@
-package com.czabala.myhome.util.user;
+package com.czabala.myhome.util.mapper;
 
 import com.czabala.myhome.util.exception.ApiException;
 

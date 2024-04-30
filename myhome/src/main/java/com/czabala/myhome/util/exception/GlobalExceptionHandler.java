@@ -22,6 +22,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<Object> handleInvalidPasswordException(InvalidPasswordException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(UnableToDeleteResource.class)
     public ResponseEntity<Object> handleUnableToDeleteResource(UnableToDeleteResource ex) {
         return ResponseEntity.status(502).body(ex.getMessage());

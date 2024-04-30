@@ -11,48 +11,54 @@ import java.util.Set;
 @RestController
 public class UserController {
     private final UserService userService;
-
+    private final String endpoint = "/user";
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping(endpoint)
     public ResponseEntity<?> findAllUsers() {
         Set<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/users/user-id")
-    public ResponseEntity<?> findUserById(@RequestParam(value = "id") long id) {
+    @GetMapping(endpoint+"/id")
+    public ResponseEntity<?> findUserById(@RequestParam(value = "id") long id, @RequestParam(value = "token") String token) {
         User user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/users/user-email")
+    @GetMapping(endpoint+"/email")
     public ResponseEntity<?> findUserByEmail(@RequestParam(value = "email") String email) {
         User user = userService.findByEmail(email);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/users/user-role")
+    @GetMapping(endpoint+"/role")
     public ResponseEntity<?> findUserByRole(@RequestParam(value = "role") String role) {
         Set<User> users = userService.findByRole(role);
         return ResponseEntity.ok(users);
     }
 
-    @PostMapping("/users/user")
+    @GetMapping(endpoint+"/token")
+    public ResponseEntity<?> findUserByToken(@RequestParam(value = "token") String token) {
+        User user = userService.findByToken(token);
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping(endpoint)
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
         User user = userService.add(userDTO);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/users/user")
+    @PutMapping(endpoint)
     public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
         userService.update(userDTO);
         return ResponseEntity.ok("Usuario actualizado exitosamente");
     }
 
-    @DeleteMapping("/users/user")
+    @DeleteMapping(endpoint)
     public ResponseEntity<String> deleteUser(@RequestParam(value = "id") long id) {
         userService.delete(id);
         return ResponseEntity.ok("Usuario eliminado exitosamente");
