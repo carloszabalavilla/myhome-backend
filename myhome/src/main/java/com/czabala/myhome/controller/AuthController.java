@@ -4,6 +4,7 @@ import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.service.database.UserService;
 import jakarta.websocket.server.PathParam;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,10 +19,12 @@ public class AuthController {
         this.userService = userService;
     }
 
-    @PostMapping(endpoint)
+    @PostMapping("/login")
     public ResponseEntity<User> userLogin(@RequestBody UserDTO userDTO) {
         User user = userService.login(userDTO);
-        return ResponseEntity.ok(user);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Authorization",user.getToken().substring(7));
+        return ResponseEntity.ok().headers(responseHeaders).body(user);
     }
 
     @PostMapping(endpoint + "/user/recovery-password")
@@ -35,5 +38,4 @@ public class AuthController {
         userService.changePassword(userDTO);
         return ResponseEntity.ok("Se ha cambiado la contraseña exitosamente");
     }
-
 }

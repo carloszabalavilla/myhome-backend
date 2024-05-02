@@ -10,6 +10,8 @@ import java.util.Set;
 @Repository
 public interface TaskRepository extends CrudRepository<Task, Long> {
     Set<Task> findAll();
+
     Task findById(long id);
+
     Set<Task> findByUser(User user);
 }

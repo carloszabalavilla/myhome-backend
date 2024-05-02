@@ -6,6 +6,6 @@ import com.czabala.myhome.domain.model.dto.TaskDTO;
 
 import java.util.Set;
 
-public interface TaskService extends Service<Task, TaskDTO>{
+public interface TaskService extends Service<Task, TaskDTO> {
     Set<Task> findByUser(User user);
 }

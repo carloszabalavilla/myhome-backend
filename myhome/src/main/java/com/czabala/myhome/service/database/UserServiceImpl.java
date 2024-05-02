@@ -12,6 +12,8 @@ import com.czabala.myhome.util.exception.UserNotFoundException;
 import com.czabala.myhome.util.mapper.MapperDTOtoDAO;
 import com.czabala.myhome.util.security.TokenGenerator;
 import com.czabala.myhome.util.validator.EmailValidator;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -19,13 +21,18 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final TokenGenerator tokenGenerator;
     private final EmailService emailService;
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
+    ;
 
     public UserServiceImpl(UserRepository userRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.emailService = emailService;
-        this.tokenGenerator = new TokenGenerator();
     }
 
     @Override
@@ -36,7 +43,6 @@ public class UserServiceImpl implements UserService {
         }
         return users;
     }
-
 
     @Override
     public User findById(long id) {
@@ -78,8 +84,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(UserDTO userDTO) {
-        User user = findByEmail(userDTO.getEmail());
-        if (user != null) {
+        User user;
+        if ((user = findByEmail(userDTO.getEmail())) != null) {
             throw new InvalidEmailException("Error al añadir usuario: Email ya registrado");
         }
         user = new User();
@@ -113,9 +119,11 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("Usuario no encontrado o contraseña incorrecta");
         } else if (!user.getPassword().equals(userDTO.getPassword())) {
             throw new AuthErrorException("Contraseña incorrecta");
-        } else if (!user.isConfirmed()) {
+        } /*else if (!user.isConfirmed()) {
             throw new TokenValidationException("Usuario no confirmado");
         }
+        */
+        user.setToken(TokenGenerator.getJWTToken(user.getEmail()));
         return user;
     }
 
@@ -124,9 +132,9 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UserNotFoundException("Usuario no encontrado");
         }
-        String token = tokenGenerator.generateToken();
+        String token = TokenGenerator.generateToken();
         user.setToken(token);
-        user.setTokenExpirationDate(tokenGenerator.generateExpirationDate());
+        user.setTokenExpirationDate(TokenGenerator.generateExpirationDate());
         emailService.sendRecoveryMessage(user.getEmail(), token);
     }
 
@@ -143,9 +151,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void registerUser(User user) {
-        String token = tokenGenerator.generateToken();
+        String token = TokenGenerator.generateToken();
         user.setToken(token);
-        user.setTokenExpirationDate(tokenGenerator.generateExpirationDate());
+        user.setTokenExpirationDate(TokenGenerator.generateExpirationDate());
         emailService.sendConfirmationMessage(user.getEmail(), token);
     }
 
