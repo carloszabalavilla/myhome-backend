@@ -19,7 +19,6 @@ import java.util.Date;
 @Component
 public class TokenGenerator {
     private static final SecureRandom secureRandom = new SecureRandom();
-    //@Value("${jwt.secret.key}")
     private static final String SECRET = "8148621D5CDFDB754CFA38431C29E3ART874B2A3C4D5E6F7A8B9C0D1E2F3A4B5";
 
     public static String generateToken() {
@@ -33,7 +32,6 @@ public class TokenGenerator {
     }
 
     public static String getJWTToken(String username) {
-
         return "Bearer " + Jwts.builder().subject(username).issuedAt(new Date(System.currentTimeMillis())).expiration(new Date(System.currentTimeMillis() + 600000))
                 .signWith(getSigningKey()).compact();
     }

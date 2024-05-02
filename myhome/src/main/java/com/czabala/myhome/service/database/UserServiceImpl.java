@@ -28,8 +28,6 @@ public class UserServiceImpl implements UserService {
         return new ModelMapper();
     }
 
-    ;
-
     public UserServiceImpl(UserRepository userRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.emailService = emailService;
@@ -84,24 +82,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(UserDTO userDTO) {
-        User user;
-        if ((user = findByEmail(userDTO.getEmail())) != null) {
+        if (findByEmail(userDTO.getEmail()) != null) {
             throw new InvalidEmailException("Error al añadir usuario: Email ya registrado");
         }
-        user = new User();
         userDTO.registerUser();
-        MapperDTOtoDAO.copyNonNullFields(userDTO, user);
-        registerUser(user);
-        return userRepository.save(user);
+        User newUser = modelMapper().map(userDTO, User.class);
+        startConfirmationProcess(newUser);
+        return userRepository.save(newUser);
     }
 
     @Override
     public User update(UserDTO userDTO) {
-        User user = findById(userDTO.getId());
-        if (user == null) {
+        if (findById(userDTO.getId()) == null) {
             throw new UserNotFoundException("Usuario no encontrado.");
         }
-        MapperDTOtoDAO.copyNonNullFields(userDTO, user);
+        User user = modelMapper().map(userDTO, User.class);
         return userRepository.save(user);
     }
 
@@ -150,7 +145,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    private void registerUser(User user) {
+    private void startConfirmationProcess(User user) {
         String token = TokenGenerator.generateToken();
         user.setToken(token);
         user.setTokenExpirationDate(TokenGenerator.generateExpirationDate());

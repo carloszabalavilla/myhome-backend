@@ -14,7 +14,7 @@ public class AppConfig {
     @Value("${spring.mail.password}")
     public static String mailPassword;
 
-    @Value("jwt.myhome.secret-key")
+    @Value("jwt.secret.key")
     public static String secretKey;
 
     @Value("localhost:8081/")

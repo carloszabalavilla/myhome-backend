@@ -50,9 +50,9 @@ public class UserDTO {
         setPassword(encryptedPassword[0]);
         setSalt(encryptedPassword[1]);
         setModules("0");
-        setToken(new TokenGenerator().generateToken());
+        setToken(TokenGenerator.generateToken());
         setConfirmed(false);
-        setTokenExpirationDate(new TokenGenerator().generateExpirationDate());
+        setTokenExpirationDate(TokenGenerator.generateExpirationDate());
         setFee(Fee.FREE);
         setMonthliesAmount(0);
         setMonthliesPaid(0);
