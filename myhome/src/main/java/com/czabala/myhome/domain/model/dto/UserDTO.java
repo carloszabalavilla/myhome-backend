@@ -1,12 +1,15 @@
 package com.czabala.myhome.domain.model.dto;
 
 import com.czabala.myhome.domain.model.dao.FamilyGroup;
-import com.czabala.myhome.domain.model.enums.user.*;
-import com.czabala.myhome.util.security.PasswordEncryptor;
+import com.czabala.myhome.domain.model.enums.user.FamilyRole;
+import com.czabala.myhome.domain.model.enums.user.Fee;
+import com.czabala.myhome.domain.model.enums.user.Newsletter;
+import com.czabala.myhome.domain.model.enums.user.PaymentMethod;
 import com.czabala.myhome.util.security.TokenGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -21,8 +24,9 @@ public class UserDTO {
     private String surname;
     private String email;
     private String password;
-    private String salt;
-    private UserRole userRole;
+    // TODO    @Deprecated
+//    private String salt;
+    private String role;
     private String modules;
     private String token;
     private boolean confirmed;
@@ -45,10 +49,10 @@ public class UserDTO {
     public void registerUser() {
         setName("0");
         setSurname("0");
-        setUserRole(UserRole.USER);
-        String[] encryptedPassword = PasswordEncryptor.encryptPassword(getPassword(), null);
-        setPassword(encryptedPassword[0]);
-        setSalt(encryptedPassword[1]);
+        if (role == null || role.isEmpty()) {
+            setRole("USER");
+        }
+        setPassword(new BCryptPasswordEncoder().encode(password));
         setModules("0");
         setToken(TokenGenerator.generateToken());
         setConfirmed(false);

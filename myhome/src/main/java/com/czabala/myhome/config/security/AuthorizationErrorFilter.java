@@ -13,9 +13,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
-public class AuthorizationErrorFilter extends OncePerRequestFilter {
-
+//@Component
+public class AuthorizationErrorFilter //extends OncePerRequestFilter
+{
+/*
     private final ObjectMapper objectMapper;
 
     public AuthorizationErrorFilter(ObjectMapper objectMapper) {
@@ -37,8 +38,10 @@ public class AuthorizationErrorFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
     }
-}
 
+ */
+}
+/*
 @Data
 @AllArgsConstructor
 class ErrorResponse {
@@ -46,3 +49,5 @@ class ErrorResponse {
     private String message;
 
 }
+
+ */

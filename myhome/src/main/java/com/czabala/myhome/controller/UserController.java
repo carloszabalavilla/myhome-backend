@@ -18,7 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> findAllUsers() {
         Set<User> users = userService.findAll();
         return ResponseEntity.ok(users);
@@ -54,13 +54,13 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
         userService.update(userDTO);
         return ResponseEntity.ok("Usuario actualizado exitosamente");
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<String> deleteUser(@RequestParam(value = "id") long id) {
         userService.delete(id);
         return ResponseEntity.ok("Usuario eliminado exitosamente");

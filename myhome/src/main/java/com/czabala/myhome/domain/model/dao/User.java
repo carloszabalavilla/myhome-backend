@@ -1,21 +1,28 @@
 package com.czabala.myhome.domain.model.dao;
 
-import com.czabala.myhome.domain.model.enums.user.*;
+import com.czabala.myhome.domain.model.enums.user.FamilyRole;
+import com.czabala.myhome.domain.model.enums.user.Fee;
+import com.czabala.myhome.domain.model.enums.user.Newsletter;
+import com.czabala.myhome.domain.model.enums.user.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "user")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -29,9 +36,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
-    private String salt;
-    @Column(nullable = false)
-    private UserRole userRole;
+    private String role;
     @Column
     private String modules;
     @Column
@@ -69,7 +74,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Task> tasks;
 
-    public boolean isTokenValid(String token) {
+    public boolean validateToken(String token) {
         return this.token.equals(token);
     }
 
@@ -77,11 +82,41 @@ public class User {
         return !tokenExpirationDate.after(Timestamp.valueOf(LocalDateTime.now()));
     }
 
-    public boolean isPasswordCorrect(String password) {
+    public boolean isPasswordValid(String password) {
         return this.password.equals(password);
     }
 
-    public boolean isEmailCorrect(String email) {
+    public boolean isEmailValid(String email) {
         return this.email.equals(email);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Set.of(new SimpleGrantedAuthority("ROLE_" + role));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isConfirmed;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isConfirmed;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isConfirmed;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isConfirmed;
     }
 }

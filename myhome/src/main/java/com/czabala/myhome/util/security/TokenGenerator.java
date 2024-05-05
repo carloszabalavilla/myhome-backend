@@ -1,11 +1,7 @@
 package com.czabala.myhome.util.security;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -42,6 +38,7 @@ public class TokenGenerator {
     }
 
     public static SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
+        //return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
+        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 }
