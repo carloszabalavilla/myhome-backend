@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TokenValidationException.class)
     public ResponseEntity<Object> handleTokenValidationException(TokenValidationException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.status(403).body(ex.getMessage());
     }
 
     @ExceptionHandler(AuthErrorException.class)
