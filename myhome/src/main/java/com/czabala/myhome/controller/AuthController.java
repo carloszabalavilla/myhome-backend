@@ -6,7 +6,6 @@ import com.czabala.myhome.service.database.UserService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public class AuthController {
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
+    //private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserService userService, AuthenticationManager authenticationManager) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
     }
     /*
     public record LoginRequest(String email, String password) {
