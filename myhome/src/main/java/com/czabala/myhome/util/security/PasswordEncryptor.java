@@ -11,6 +11,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 
+//TODO remove class from project and use BCryptPasswordEncoder from Spring Security
 public class PasswordEncryptor {
 
     public static String[] encryptPassword(String password, String inputSalt) {
@@ -26,13 +27,13 @@ public class PasswordEncryptor {
             KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             byte[] hash = factory.generateSecret(spec).getEncoded();
-            return new String[] {Arrays.toString(hash), Arrays.toString(salt)};
+            return new String[]{Arrays.toString(hash), Arrays.toString(salt)};
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new ApiException("Error al encriptar la contraseña" + e);
         }
     }
 
     public static boolean checkPassword(String password, String encryptedPassword, String salt) {
-        return encryptPassword(password,salt)[0].equals(encryptedPassword);
+        return encryptPassword(password, salt)[0].equals(encryptedPassword);
     }
 }

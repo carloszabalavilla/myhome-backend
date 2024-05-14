@@ -16,7 +16,9 @@ public interface UserService extends Service<User, UserDTO> {
 
     void recoveryPassword(String email);
 
-    void changePassword(UserDTO userDTO);
-
     User findByToken(String token);
+
+    void changePassword(String email, String password);
+
+    void resendConfirmation(String email);
 }

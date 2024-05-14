@@ -29,7 +29,7 @@ public class MapperDTOtoDAO {
                 }
             }
         } catch (IllegalAccessException e) {
-            throw new ApiException("Error al copiar los campos no nulos de un objeto a otro: " + sourceClass.getName() + " -> " + destinationClass.getName()) ;
+            throw new ApiException("Error al copiar los campos no nulos de un objeto a otro: " + sourceClass.getName() + " -> " + destinationClass.getName());
         }
     }
 
