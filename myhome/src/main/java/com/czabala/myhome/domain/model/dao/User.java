@@ -102,21 +102,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return isConfirmed;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return isConfirmed;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return isConfirmed;
+        return true;
     }
-
+    //TODO: implement enabled field instead of deleting the user from db
     @Override
     public boolean isEnabled() {
-        return isConfirmed;
+        return true;
     }
 }

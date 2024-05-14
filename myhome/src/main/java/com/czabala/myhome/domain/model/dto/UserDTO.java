@@ -24,8 +24,6 @@ public class UserDTO {
     private String surname;
     private String email;
     private String password;
-    // TODO    @Deprecated
-//    private String salt;
     private String role;
     private String modules;
     private String token;

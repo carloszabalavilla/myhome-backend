@@ -1,11 +1,12 @@
 package com.czabala.myhome.service.database;
 
+import com.czabala.myhome.domain.model.dao.FamilyGroup;
 import com.czabala.myhome.domain.model.dao.Task;
 import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.TaskDTO;
 import com.czabala.myhome.domain.repository.TaskRepository;
-import com.czabala.myhome.util.exception.TaskNotFoundException;
-import com.czabala.myhome.util.mapper.MapperDTOtoDAO;
+import com.czabala.myhome.util.exception.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -23,7 +24,7 @@ public class TaskServiceImpl implements TaskService {
     public Set<Task> findAll() {
         Set<Task> tasks = taskRepository.findAll();
         if (tasks.isEmpty()) {
-            throw new TaskNotFoundException("No hay tareas registradas");
+            throw new EntityNotFoundException("No hay tareas registradas");
         }
         return tasks;
     }
@@ -32,7 +33,7 @@ public class TaskServiceImpl implements TaskService {
     public Task findById(long id) {
         Task task = taskRepository.findById(id);
         if (task == null) {
-            throw new TaskNotFoundException("Tarea no encontrada.");
+            throw new EntityNotFoundException("Tarea no encontrada.");
         }
         return task;
     }
@@ -41,34 +42,34 @@ public class TaskServiceImpl implements TaskService {
     public Set<Task> findByUser(User user) {
         Set<Task> tasks = taskRepository.findByUser(user);
         if (tasks.isEmpty()) {
-            throw new TaskNotFoundException("No hay tareas registradas");
+            throw new EntityNotFoundException("No hay tareas registradas");
         }
         return tasks;
     }
 
+    //TODO: Implement this method
+    @Override
+    public Set<Task> findByFamilyGroup(FamilyGroup familyGroup) {
+        return Set.of();
+    }
+
     @Override
     public Task add(TaskDTO taskDTO) {
-        Task task = new Task();
-        MapperDTOtoDAO.copyNonNullFields(taskDTO, task);
-        return taskRepository.save(task);
+        return taskRepository.save(new ModelMapper().map(taskDTO, Task.class));
     }
 
     @Override
     public Task update(TaskDTO taskDTO) {
-        Task task = taskRepository.findById(taskDTO.getId());
-        if (task == null) {
-            throw new TaskNotFoundException("Tarea no encontrada.");
+        if ((findById(taskDTO.getId())) == null) {
+            throw new EntityNotFoundException("Tarea no encontrada");
         }
-        MapperDTOtoDAO.copyNonNullFields(taskDTO, task);
+        Task task = new ModelMapper().map(taskDTO, Task.class);
         return taskRepository.save(task);
     }
 
     @Override
     public void delete(long id) {
-        Task task = taskRepository.findById(id);
-        if (task == null) {
-            throw new TaskNotFoundException("Tarea no encontrada.");
-        }
-        taskRepository.delete(task);
+        findById(id);
+        taskRepository.deleteById(id);
     }
 }
