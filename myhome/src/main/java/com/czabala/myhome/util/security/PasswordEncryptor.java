@@ -10,6 +10,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+
 //TODO remove class from project and use BCryptPasswordEncoder from Spring Security
 public class PasswordEncryptor {
 

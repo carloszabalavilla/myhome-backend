@@ -11,7 +11,7 @@ syntax: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-git
 
 ### Added
 
-First version of the api with the following features (still not tested): 
+First version of the api with the following features (still not tested):
 
 - Controllers defined and tested with tests
 - Services implemented

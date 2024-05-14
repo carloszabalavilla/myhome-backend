@@ -114,6 +114,7 @@ public class User implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     //TODO: implement enabled field instead of deleting the user from db
     @Override
     public boolean isEnabled() {

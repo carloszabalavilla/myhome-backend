@@ -24,6 +24,7 @@ public class TaskController {
 
     /**
      * Constructs a new TaskController with the specified TaskService.
+     *
      * @param taskService the TaskService to be used by the TaskController
      */
     public TaskController(TaskService taskService) {
@@ -32,6 +33,7 @@ public class TaskController {
 
     /**
      * Handles a GET request to find all tasks.
+     *
      * @return a ResponseEntity containing a Set of all Tasks
      */
     @GetMapping
@@ -41,6 +43,7 @@ public class TaskController {
 
     /**
      * Handles a GET request to find a task by id.
+     *
      * @param id the id of the task to find
      * @return a ResponseEntity containing the Task with the specified id
      */
@@ -51,6 +54,7 @@ public class TaskController {
 
     /**
      * Handles a GET request to find tasks by user.
+     *
      * @param user the user of the tasks to find
      * @return a ResponseEntity containing a Set of Tasks with the specified user
      */
@@ -61,6 +65,7 @@ public class TaskController {
 
     /**
      * Handles a GET request to find tasks by family group.
+     *
      * @param familyGroup the family group of the tasks to find
      * @return a ResponseEntity containing a Set of Tasks with the specified family group
      */
@@ -71,6 +76,7 @@ public class TaskController {
 
     /**
      * Handles a POST request to create a task.
+     *
      * @param taskDTO the TaskDTO containing the new task's information
      * @return a ResponseEntity containing the created Task
      */
@@ -81,6 +87,7 @@ public class TaskController {
 
     /**
      * Handles a PUT request to update a task.
+     *
      * @param taskDTO the TaskDTO containing the updated task's information
      * @return a ResponseEntity containing the updated Task
      */
@@ -91,12 +98,13 @@ public class TaskController {
 
     /**
      * Handles a DELETE request to delete a task.
+     *
      * @param id the id of the task to delete
      * @return a ResponseEntity containing a message indicating that the task has been deleted
      */
     @DeleteMapping
     public ResponseEntity<String> deleteTask(@RequestParam(value = "id") long id) {
         taskService.delete(id);
-        return JsonObject.jsonMsgResponse(200,"Tarea eliminada exitosamente");
+        return JsonObject.jsonMsgResponse(200, "Tarea eliminada exitosamente");
     }
 }

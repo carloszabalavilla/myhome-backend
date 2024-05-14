@@ -1,6 +1,5 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.controller.FamilyGroupController;
 import com.czabala.myhome.domain.model.dao.FamilyGroup;
 import com.czabala.myhome.domain.model.dto.FamilyGroupDTO;
 import com.czabala.myhome.service.database.FamilyGroupService;

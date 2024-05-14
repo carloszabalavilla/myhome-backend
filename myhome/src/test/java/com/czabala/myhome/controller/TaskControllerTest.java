@@ -1,6 +1,5 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.controller.TaskController;
 import com.czabala.myhome.domain.model.dao.FamilyGroup;
 import com.czabala.myhome.domain.model.dao.Task;
 import com.czabala.myhome.domain.model.dao.User;

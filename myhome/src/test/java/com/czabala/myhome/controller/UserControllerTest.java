@@ -1,6 +1,10 @@
 package com.czabala.myhome.controller;
 
 import com.czabala.myhome.domain.model.dao.User;
+import com.czabala.myhome.domain.model.dto.UserDTO;
+import com.czabala.myhome.service.database.UserService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -11,12 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import com.czabala.myhome.domain.model.dto.UserDTO;
-import com.czabala.myhome.service.database.UserService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.mockito.Mockito.when;
 
 public class UserControllerTest {

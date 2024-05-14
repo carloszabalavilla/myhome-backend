@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static java.util.Map.of;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JsonObjectTest {
 

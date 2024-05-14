@@ -20,6 +20,7 @@ public class AuthController {
 
     /**
      * Constructs a new AuthController with the specified UserService.
+     *
      * @param userService the UserService to be used by the AuthController
      */
     public AuthController(UserService userService) {
@@ -28,6 +29,7 @@ public class AuthController {
 
     /**
      * Handles a POST request for user login.
+     *
      * @param userDTO the UserDTO containing the user's login information
      * @return a ResponseEntity containing the logged in User
      */
@@ -41,6 +43,7 @@ public class AuthController {
 
     /**
      * Handles a POST request for user registration.
+     *
      * @param userDTO the UserDTO containing the new user's information
      * @return a ResponseEntity containing the created User
      */
@@ -51,6 +54,7 @@ public class AuthController {
 
     /**
      * Handles a GET request for password recovery.
+     *
      * @param email the email of the user who forgot their password
      * @return a ResponseEntity containing a message indicating that password recovery instructions have been sent
      */
@@ -62,6 +66,7 @@ public class AuthController {
 
     /**
      * Handles a PUT request to change a user's password.
+     *
      * @param email the email of the user changing their password
      * @return a ResponseEntity containing a message indicating that the password has been changed
      */
@@ -74,26 +79,26 @@ public class AuthController {
 
     /**
      * Handles a PUT request to confirm a user's account.
-       *
+     *
      * @param token the confirmation token. This is a request parameter that is part of the URL.
      * @return a ResponseEntity containing a message indicating that the user has been confirmed. The status code of the ResponseEntity is 200.
      */
     @PutMapping("/confirm")
     public ResponseEntity<?> confirmUser(@RequestParam String token) {
         userService.processConfirmationToken(token);
-        return JsonObject.jsonMsgResponse(200,"Usuario confirmado con exito");
+        return JsonObject.jsonMsgResponse(200, "Usuario confirmado con exito");
     }
 
     /**
      * Handles a PUT request to change a user's password.
-      *
-     * @param email the email of the user changing their password. This is a path variable that is part of the URL.
+     *
+     * @param email   the email of the user changing their password. This is a path variable that is part of the URL.
      * @param userDTO the UserDTO object that contains the new password. This object is part of the request body.
      * @return a ResponseEntity containing a message indicating that the password has been changed. The status code of the ResponseEntity is 200.
      */
     @PutMapping("/change-password/{email}")
     public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody UserDTO userDTO) {
-        userService.changePassword(email,userDTO.getPassword());
+        userService.changePassword(email, userDTO.getPassword());
         return JsonObject.jsonMsgResponse(200, "Se ha cambiado la contraseña con exito");
     }
 }

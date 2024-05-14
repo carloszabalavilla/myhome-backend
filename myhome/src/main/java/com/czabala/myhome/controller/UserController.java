@@ -4,8 +4,6 @@ import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.service.database.UserService;
 import com.czabala.myhome.util.mapper.JsonObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +24,7 @@ public class UserController {
 
     /**
      * Constructs a new UserController with the specified UserService.
+     *
      * @param userService the UserService to be used by the UserController
      */
     public UserController(UserService userService) {
@@ -34,6 +33,7 @@ public class UserController {
 
     /**
      * Handles a GET request to find all users.
+     *
      * @return a ResponseEntity containing a Set of all Users
      */
     @GetMapping
@@ -43,6 +43,7 @@ public class UserController {
 
     /**
      * Handles a GET request to find a user by id.
+     *
      * @param id the id of the user to find
      * @return a ResponseEntity containing the User with the specified id
      */
@@ -53,6 +54,7 @@ public class UserController {
 
     /**
      * Handles a GET request to find a user by email.
+     *
      * @param email the email of the user to find
      * @return a ResponseEntity containing the User with the specified email
      */
@@ -63,6 +65,7 @@ public class UserController {
 
     /**
      * Handles a GET request to find users by role.
+     *
      * @param role the role of the users to find
      * @return a ResponseEntity containing a Set of Users with the specified role
      */
@@ -73,6 +76,7 @@ public class UserController {
 
     /**
      * Handles a GET request to find a user by token.
+     *
      * @param token the token of the user to find
      * @return a ResponseEntity containing the User with the specified token
      */
@@ -83,6 +87,7 @@ public class UserController {
 
     /**
      * Handles a POST request to create a user.
+     *
      * @param userDTO the UserDTO containing the new user's information
      * @return a ResponseEntity containing the created User
      */
@@ -93,6 +98,7 @@ public class UserController {
 
     /**
      * Handles a PUT request to update a user.
+     *
      * @param userDTO the UserDTO containing the updated user's information
      * @return a ResponseEntity containing the updated User
      */
@@ -103,6 +109,7 @@ public class UserController {
 
     /**
      * Handles a DELETE request to delete a user.
+     *
      * @param id the id of the user to delete
      * @return a ResponseEntity containing a message indicating that the user has been deleted
      */

@@ -22,6 +22,7 @@ public class FamilyGroupController {
 
     /**
      * Constructs a new FamilyGroupController with the specified FamilyGroupService.
+     *
      * @param familyGroupService the FamilyGroupService to be used by the FamilyGroupController
      */
     public FamilyGroupController(FamilyGroupService familyGroupService) {
@@ -30,6 +31,7 @@ public class FamilyGroupController {
 
     /**
      * Handles a GET request to find all family groups.
+     *
      * @return a ResponseEntity containing a Set of all FamilyGroups
      */
     @GetMapping
@@ -39,6 +41,7 @@ public class FamilyGroupController {
 
     /**
      * Handles a GET request to find a family group by id.
+     *
      * @param id the id of the family group to find
      * @return a ResponseEntity containing the FamilyGroup with the specified id
      */
@@ -49,6 +52,7 @@ public class FamilyGroupController {
 
     /**
      * Handles a GET request to find a family group by user.
+     *
      * @param email the email of the user whose family group to find
      * @return a ResponseEntity containing the FamilyGroup of the specified user
      */
@@ -59,6 +63,7 @@ public class FamilyGroupController {
 
     /**
      * Handles a POST request to create a family group.
+     *
      * @param familyGroupDTO the FamilyGroupDTO containing the new family group's information
      * @return a ResponseEntity containing the created FamilyGroup
      */
@@ -69,6 +74,7 @@ public class FamilyGroupController {
 
     /**
      * Handles a PUT request to update a family group.
+     *
      * @param familyGroupDTO the FamilyGroupDTO containing the updated family group's information
      * @return a ResponseEntity containing the updated FamilyGroup
      */
@@ -79,6 +85,7 @@ public class FamilyGroupController {
 
     /**
      * Handles a DELETE request to delete a family group.
+     *
      * @param id the id of the family group to delete
      * @return a ResponseEntity containing a message indicating that the family group has been deleted
      */

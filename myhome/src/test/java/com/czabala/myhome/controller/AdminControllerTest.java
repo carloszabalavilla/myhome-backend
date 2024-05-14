@@ -1,6 +1,5 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.controller.AdminController;
 import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.service.database.UserService;
