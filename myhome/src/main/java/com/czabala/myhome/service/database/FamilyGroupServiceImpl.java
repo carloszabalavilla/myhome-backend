@@ -23,15 +23,6 @@ public class FamilyGroupServiceImpl implements FamilyGroupService {
     }
 
     @Override
-    public FamilyGroup findByUser(String email) {
-        FamilyGroup familyGroup = familyGroupRepository.findByUser(email);
-        if (familyGroup == null) {
-            throw new EntityNotFoundException("Grupo Familiar no encontrado");
-        }
-        return familyGroup;
-    }
-
-    @Override
     public FamilyGroup findById(long id) {
         FamilyGroup familyGroup = familyGroupRepository.findById(id);
         if (familyGroup == null) {

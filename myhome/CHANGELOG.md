@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For the
 syntax: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
+## [1.0.1] - 2024-05-17
+
+### Fixed
+
+- Some errors where fixed in user management
+- Updated branch
+
 ## [1.0.0] - 2024-05-14
 
 ### Added

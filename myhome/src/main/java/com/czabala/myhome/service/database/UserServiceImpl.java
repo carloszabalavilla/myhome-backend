@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.Set;
 
 //TODO: Remove sensitive information before send back to client
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User add(UserDTO userDTO) {
-        if (findByEmail(userDTO.getEmail()) != null) {
+        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
             throw new InvalidFieldException("El email ya está registrado");
         }
         userDTO.registerUser();
@@ -86,9 +87,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(UserDTO userDTO) {
-        if ((findById(userDTO.getId())) == null) {
-            throw new EntityNotFoundException("Usuario no encontrado.");
-        }
+        findById(userDTO.getId());
         User user = new ModelMapper().map(userDTO, User.class);
         return userRepository.save(user);
     }
@@ -119,17 +118,18 @@ public class UserServiceImpl implements UserService {
         String token = TokenGenerator.generateToken();
         user.setToken(token);
         user.setTokenExpirationDate(TokenGenerator.generateExpirationDate());
+        userRepository.save(user);
         emailService.sendRecoveryMessage(user.getEmail(), token);
     }
 
     @Override
-    public void changePassword(String email, String password) {
-        // Check password strength
-        User user = userRepository.findByEmail(email);
+    public void changePassword(UserDTO userDTO) {
+        //TODO: Check password strength
+        User user = userRepository.findByEmail(userDTO.getEmail());
         if (user == null) {
             throw new InvalidFieldException("El email no está registrado");
         }
-        user.setPassword(password);
+        user.setPassword(new BCryptPasswordEncoder().encode(userDTO.getPassword()));
         userRepository.save(user);
     }
 
@@ -142,6 +142,25 @@ public class UserServiceImpl implements UserService {
             throw new AuthErrorException("Usuario ya confirmado");
         }
         startConfirmationProcess(user);
+    }
+
+    @Override
+    public Object findField(long id, String field) {
+        User user = findById(id);
+        Object value = new Object();
+        for (Field f : user.getClass().getDeclaredFields()) {
+            if (f.getName().equals(field)) {
+                try {
+                    f.setAccessible(true);
+                    value = f.get(user);
+                } catch (IllegalAccessException e) {
+                    throw new InvalidFieldException("No ha sido posible acceder al campo");
+                }
+            } else {
+                throw new InvalidFieldException("Campo no encontrado");
+            }
+        }
+        return value;
     }
 
     private void startConfirmationProcess(User user) {

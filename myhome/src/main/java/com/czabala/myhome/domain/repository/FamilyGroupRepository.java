@@ -12,5 +12,4 @@ public interface FamilyGroupRepository extends CrudRepository<FamilyGroup, Long>
 
     FamilyGroup findById(long id);
 
-    FamilyGroup findByUser(String email);
 }

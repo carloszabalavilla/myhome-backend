@@ -49,7 +49,7 @@ public class AuthController {
      */
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.status(201).body(userService.add(userDTO));
+        return JsonObject.jsonMsgResponse(201, "Se ha enviado un correo de confirmación");
     }
 
     /**
@@ -92,13 +92,12 @@ public class AuthController {
     /**
      * Handles a PUT request to change a user's password.
      *
-     * @param email   the email of the user changing their password. This is a path variable that is part of the URL.
-     * @param userDTO the UserDTO object that contains the new password. This object is part of the request body.
+     * @param userDTO the UserDTO object that contains the email and new password. This object is part of the request body.
      * @return a ResponseEntity containing a message indicating that the password has been changed. The status code of the ResponseEntity is 200.
      */
-    @PutMapping("/change-password/{email}")
-    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody UserDTO userDTO) {
-        userService.changePassword(email, userDTO.getPassword());
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody UserDTO userDTO) {
+        userService.changePassword(userDTO);
         return JsonObject.jsonMsgResponse(200, "Se ha cambiado la contraseña con exito");
     }
 }

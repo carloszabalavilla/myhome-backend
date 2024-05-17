@@ -49,16 +49,6 @@ public class FamilyGroupControllerTest {
     }
 
     @Test
-    public void findFamilyGroupByUserReturnsFamilyGroup() {
-        FamilyGroup familyGroup = new FamilyGroup();
-        when(familyGroupService.findByUser("test@test.com")).thenReturn(familyGroup);
-
-        var response = familyGroupController.findFamilyGroupByUser("test@test.com");
-
-        assertEquals(familyGroup, response.getBody());
-    }
-
-    @Test
     public void createFamilyGroupReturnsCreatedFamilyGroup() {
         FamilyGroupDTO familyGroupDTO = new FamilyGroupDTO();
         FamilyGroup familyGroup = new FamilyGroup();

@@ -12,4 +12,5 @@ public interface Service<T, U> {
     T update(U u);
 
     void delete(long id);
+
 }

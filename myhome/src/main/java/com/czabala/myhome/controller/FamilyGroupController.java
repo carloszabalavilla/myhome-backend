@@ -51,17 +51,6 @@ public class FamilyGroupController {
     }
 
     /**
-     * Handles a GET request to find a family group by user.
-     *
-     * @param email the email of the user whose family group to find
-     * @return a ResponseEntity containing the FamilyGroup of the specified user
-     */
-    @GetMapping("/user")
-    public ResponseEntity<FamilyGroup> findFamilyGroupByUser(@RequestParam String email) {
-        return ResponseEntity.ok(familyGroupService.findByUser(email));
-    }
-
-    /**
      * Handles a POST request to create a family group.
      *
      * @param familyGroupDTO the FamilyGroupDTO containing the new family group's information

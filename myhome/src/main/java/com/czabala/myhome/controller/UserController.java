@@ -86,6 +86,20 @@ public class UserController {
     }
 
     /**
+     * Handles a GET request to find a specific field of a user by id.
+     * This method is mapped to the "/{id}/{field}" endpoint and is invoked when a GET request is made to this endpoint.
+     * It uses the UserService to find the user with the specified id and return the value of the specified field.
+     *
+     * @param id    the id of the user. This is a path variable that is part of the URL.
+     * @param field the field of the user to find. This is a path variable that is part of the URL.
+     * @return a ResponseEntity containing the value of the specified field of the User with the specified id.
+     */
+    @GetMapping("/{id}/{field}")
+    public ResponseEntity<?> findUserField(@PathVariable long id, @PathVariable String field) {
+        return ResponseEntity.ok(userService.findField(id, field));
+    }
+
+    /**
      * Handles a POST request to create a user.
      *
      * @param userDTO the UserDTO containing the new user's information

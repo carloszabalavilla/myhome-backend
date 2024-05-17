@@ -65,13 +65,14 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void changePasswordReturnsSuccessMessage() {
+    public void resetPasswordReturnsSuccessMessage() {
         String email = "test@test.com";
         String password = "newPassword";
+        String token = "";
         String expectedResponse = "{\"message\": \"Se ha cambiado la contraseña con exito\"}";
         UserDTO userDTO = new UserDTO();
         userDTO.setPassword(password);
-        ResponseEntity<?> response = authController.changePassword(email, userDTO);
+        ResponseEntity<?> response = authController.resetPassword(userDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedResponse, response.getBody());
