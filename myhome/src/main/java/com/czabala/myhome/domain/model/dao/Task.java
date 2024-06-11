@@ -1,9 +1,12 @@
 package com.czabala.myhome.domain.model.dao;
 
+import com.czabala.myhome.domain.model.dto.TaskDTO;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 
-import java.sql.Timestamp;
+import java.sql.Date;
+import java.sql.Time;
 
 @Data
 @Entity(name = "task")
@@ -17,17 +20,23 @@ public class Task {
     @Column
     private String description;
     @Column(nullable = false)
-    private int spendingTime;
-    @Column
-    private String assignedBy;
+    private String color;
     @Column(nullable = false)
-    private boolean idEditable;
-    @Column
-    private Timestamp deadline;
+    private Date date;
+    @Column(nullable = false)
+    private Time startHour;
+    @Column(nullable = false)
+    private Time endHour;
     @Column(nullable = false)
     private boolean isDone;
+    @Column(nullable = false)
+    private Date createdAt;
+    @Column(nullable = false)
+    private long createdBy;
     @ManyToOne
     private User user;
 
-
+    public TaskDTO toDTO() {
+        return new ModelMapper().map(this, TaskDTO.class);
+    }
 }

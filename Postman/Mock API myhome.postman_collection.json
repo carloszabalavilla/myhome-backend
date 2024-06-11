@@ -1,782 +1,782 @@
 {
-	"info": {
-		"_postman_id": "74bef5fd-94a1-46c5-a1c7-79f042a4e132",
-		"name": "Mock API myhome",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "34079331"
-	},
-	"item": [
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "getAllUsers",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/user",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getUserByEmail",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/users/user-email?email=b@a.com",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"users",
-								"user-email"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "b@a.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getUsersByRole",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/users/user-role?role=USER",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"users",
-								"user-role"
-							],
-							"query": [
-								{
-									"key": "role",
-									"value": "USER"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getUserById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/user/id?id=12",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"user",
-								"id"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "12"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createUser",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Carlos\",\r\n  \"surname\": \"Zabala\",\r\n  \"email\": \"czabala@example.com\",\r\n  \"password\": \"password123\",\r\n  \"userRole\": 0,\r\n  \"modules\": null,\r\n  \"confirmationToken\": \"token1234\",\r\n  \"confirmed\": true,\r\n  \"tokenExpirationDate\": \"2024-04-07T10:15:30Z\",\r\n  \"fee\": 0,\r\n  \"monthliesAmount\": 0,\r\n  \"monthliesPaid\": 0,\r\n  \"paymentMethod\": null,\r\n  \"paymentDetails\": null,\r\n  \"paymentToken\": null,\r\n  \"familyRole\": null,\r\n  \"address\": \"123 Main Street\",\r\n  \"birthDate\": \"1990-01-01\",\r\n  \"phoneNumber\": \"1234567890\",\r\n  \"avatar\": null,\r\n  \"newsletter\": 0,\r\n  \"familyGroup\": null\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8081/users/user",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"users",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateUser",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"id\": 13,\r\n  \"surname\": \"Zabala Villanueva\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8081/users/user",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"users",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteUser",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/users/user?id=12",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"users",
-								"user"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "12"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Tasks",
-			"item": [
-				{
-					"name": "getAllTasks",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/tasks",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"tasks"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getTaskById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/tasks/task-id?id=1",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"tasks",
-								"task-id"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getTaskByUser",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/tasks/user",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"tasks",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createTask",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/tasks/task",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"tasks",
-								"task"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateTask",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/tasks/task",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"tasks",
-								"task"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteTask",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:8081/tasks/task",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"tasks",
-								"task"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Family",
-			"item": []
-		},
-		{
-			"name": "Auth",
-			"item": [
-				{
-					"name": "Login - API",
-					"item": [
-						{
-							"name": "Ping API",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"\r",
-											"pm.test(\"Response status code is 200\", function () {\r",
-											"    pm.response.to.have.status(200);\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"Response content type is 'text/xml'\", function () {\r",
-											"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"text/xml\");\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"Response body is not empty\", function () {\r",
-											"    const responseData = xml2Json(pm.response.text());\r",
-											"    \r",
-											"    pm.expect(responseData).to.exist.and.not.to.be.empty;\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"Response body is in a valid XML format\", function () {\r",
-											"    const responseData = xml2Json(pm.response.text());\r",
-											"    pm.expect(responseData).to.not.be.an('error');\r",
-											"});\r",
-											"\r",
-											"\r",
-											"pm.test(\"Response time is less than 200ms\", function () {\r",
-											"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
-											"});\r",
-											"\r",
-											""
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{api_baseUrl}}/auth/api/ping",
-									"host": [
-										"{{api_baseUrl}}"
-									],
-									"path": [
-										"auth",
-										"api",
-										"ping"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "createUser",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"superuser\":\"czabaladev\",\r\n    \"newuser\":\"myhomeclient-local\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{api_baseUrl}}/auth/api/new-api-user",
-									"host": [
-										"{{api_baseUrl}}"
-									],
-									"path": [
-										"auth",
-										"api",
-										"new-api-user"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "pingToken",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{api_baseUrl}}/auth/api/token/ping",
-									"host": [
-										"{{api_baseUrl}}"
-									],
-									"path": [
-										"auth",
-										"api",
-										"token",
-										"ping"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "userLogin",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"    var headerValue = pm.response.headers.get(\"Authorization\");\r",
-									"    pm.environment.set(\"jwt\", headerValue); \r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"carloszabalavilla@gmail.com\",\r\n    \"password\": \"rukia1225dev\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{api_baseUrl}}/auth/login",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "registerUser",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"carloszabalavilla@gmail.com\",\r\n    \"password\":\"rukia1225dev\",\r\n    \"role\":\"ADMIN\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{api_baseUrl}}/auth/register",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "confirmUser",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/auth/confirm?token=47f11c40d555ee25e908a72fe58e44e434599143ff1d2a2444d28f7f343d511f",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"auth",
-								"confirm"
-							],
-							"query": [
-								{
-									"key": "token",
-									"value": "47f11c40d555ee25e908a72fe58e44e434599143ff1d2a2444d28f7f343d511f"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"auth": {
-				"type": "noauth"
-			},
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
-			"name": "Admin",
-			"item": [
-				{
-					"name": "findAllAdmin",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/admin",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"admin"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "findAdminById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/admin/id?id=1",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"id"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createAdmin",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"carloszabalavilla@gmail.com\",\r\n    \"password\":\"rukia1225dev\",\r\n    \"role\":\"ADMIN\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "createAdmin",
-							"host": [
-								"createAdmin"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateAdmin",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/admin",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"admin"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "addAdmin",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/admin/add?email=test@example.com",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"add"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "test@example.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteAdmin",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/admin?id=1",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"admin"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "removeAdmin",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": {
-							"raw": "{{api_baseUrl}}/admin/remove?email=test@example.com",
-							"host": [
-								"{{api_baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"remove"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": "test@example.com"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{jwt}}",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	]
+  "info": {
+    "_postman_id": "74bef5fd-94a1-46c5-a1c7-79f042a4e132",
+    "name": "Mock API myhome",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "34079331"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "getAllUsers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/user",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUserByEmail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/users/user-email?email=b@a.com",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "user-email"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "b@a.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUsersByRole",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/users/user-role?role=USER",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "user-role"
+              ],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "USER"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getUserById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/user/id?id=12",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "user",
+                "id"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "12"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "createUser",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Carlos\",\r\n  \"surname\": \"Zabala\",\r\n  \"email\": \"czabala@example.com\",\r\n  \"password\": \"password123\",\r\n  \"userRole\": 0,\r\n  \"modules\": null,\r\n  \"confirmationToken\": \"token1234\",\r\n  \"confirmed\": true,\r\n  \"tokenExpirationDate\": \"2024-04-07T10:15:30Z\",\r\n  \"fee\": 0,\r\n  \"monthliesAmount\": 0,\r\n  \"monthliesPaid\": 0,\r\n  \"paymentMethod\": null,\r\n  \"paymentDetails\": null,\r\n  \"paymentToken\": null,\r\n  \"familyRole\": null,\r\n  \"address\": \"123 Main Street\",\r\n  \"birthDate\": \"1990-01-01\",\r\n  \"phoneNumber\": \"1234567890\",\r\n  \"avatar\": null,\r\n  \"newsletter\": 0,\r\n  \"familyGroup\": null\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users/user",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateUser",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"id\": 13,\r\n  \"surname\": \"Zabala Villanueva\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users/user",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteUser",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/users/user?id=12",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "user"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "12"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "getAllTasks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/tasks",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "tasks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getTaskById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/tasks/task-id?id=1",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "tasks",
+                "task-id"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getTaskByUser",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/tasks/user",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "tasks",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "createTask",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/tasks/task",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "tasks",
+                "task"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateTask",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/tasks/task",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "tasks",
+                "task"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteTask",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "localhost:8081/tasks/task",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "tasks",
+                "task"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Family",
+      "item": []
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login - API",
+          "item": [
+            {
+              "name": "Ping API",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "\r",
+                      "pm.test(\"Response status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Response content type is 'text/xml'\", function () {\r",
+                      "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"text/xml\");\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Response body is not empty\", function () {\r",
+                      "    const responseData = xml2Json(pm.response.text());\r",
+                      "    \r",
+                      "    pm.expect(responseData).to.exist.and.not.to.be.empty;\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Response body is in a valid XML format\", function () {\r",
+                      "    const responseData = xml2Json(pm.response.text());\r",
+                      "    pm.expect(responseData).to.not.be.an('error');\r",
+                      "});\r",
+                      "\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 200ms\", function () {\r",
+                      "  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{api_baseUrl}}/auth/api/ping",
+                  "host": [
+                    "{{api_baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "ping"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "createUser",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"superuser\":\"czabaladev\",\r\n    \"newuser\":\"myhomeclient-local\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_baseUrl}}/auth/api/new-api-user",
+                  "host": [
+                    "{{api_baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "new-api-user"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "pingToken",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{api_baseUrl}}/auth/api/token/ping",
+                  "host": [
+                    "{{api_baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "api",
+                    "token",
+                    "ping"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "userLogin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    var headerValue = pm.response.headers.get(\"Authorization\");\r",
+                  "    pm.environment.set(\"jwt\", headerValue); \r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"carloszabalavilla@gmail.com\",\r\n    \"password\": \"rukia1225dev\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_baseUrl}}/auth/login",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "registerUser",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"carloszabalavilla@gmail.com\",\r\n    \"password\":\"rukia1225dev\",\r\n    \"role\":\"ADMIN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{api_baseUrl}}/auth/register",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "confirmUser",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/auth/confirm?token=47f11c40d555ee25e908a72fe58e44e434599143ff1d2a2444d28f7f343d511f",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "confirm"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "47f11c40d555ee25e908a72fe58e44e434599143ff1d2a2444d28f7f343d511f"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "findAllAdmin",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/admin",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "findAdminById",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/admin/id?id=1",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "id"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "createAdmin",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"carloszabalavilla@gmail.com\",\r\n    \"password\":\"rukia1225dev\",\r\n    \"role\":\"ADMIN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "createAdmin",
+              "host": [
+                "createAdmin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateAdmin",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/admin",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "addAdmin",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/admin/add?email=test@example.com",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "add"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "test@example.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deleteAdmin",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/admin?id=1",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "admin"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "removeAdmin",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{api_baseUrl}}/admin/remove?email=test@example.com",
+              "host": [
+                "{{api_baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "remove"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "test@example.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
 }

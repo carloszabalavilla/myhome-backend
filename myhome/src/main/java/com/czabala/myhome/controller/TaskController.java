@@ -1,10 +1,9 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.domain.model.dao.FamilyGroup;
-import com.czabala.myhome.domain.model.dao.Task;
+import com.czabala.myhome.domain.model.dao.Family;
 import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.TaskDTO;
-import com.czabala.myhome.service.database.TaskService;
+import com.czabala.myhome.service.TaskService;
 import com.czabala.myhome.util.mapper.JsonObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +36,7 @@ public class TaskController {
      * @return a ResponseEntity containing a Set of all Tasks
      */
     @GetMapping
-    public ResponseEntity<Set<Task>> findAllTasks() {
+    public ResponseEntity<Set<TaskDTO>> findAllTasks() {
         return ResponseEntity.ok(taskService.findAll());
     }
 
@@ -48,7 +47,7 @@ public class TaskController {
      * @return a ResponseEntity containing the Task with the specified id
      */
     @GetMapping("/id")
-    public ResponseEntity<Task> findTaskById(@RequestParam(value = "id") long id) {
+    public ResponseEntity<TaskDTO> findTaskById(@RequestParam long id) {
         return ResponseEntity.ok(taskService.findById(id));
     }
 
@@ -59,19 +58,19 @@ public class TaskController {
      * @return a ResponseEntity containing a Set of Tasks with the specified user
      */
     @GetMapping("/user")
-    public ResponseEntity<Set<Task>> findTaskByUser(@RequestParam(value = "user") User user) {
+    public ResponseEntity<Set<TaskDTO>> findTaskByUser(@RequestBody User user) {
         return ResponseEntity.ok(taskService.findByUser(user));
     }
 
     /**
      * Handles a GET request to find tasks by family group.
      *
-     * @param familyGroup the family group of the tasks to find
+     * @param family the family group of the tasks to find
      * @return a ResponseEntity containing a Set of Tasks with the specified family group
      */
     @GetMapping("/family-group")
-    public ResponseEntity<Set<Task>> findTaskByFamilyGroup(@RequestParam(value = "family") FamilyGroup familyGroup) {
-        return ResponseEntity.ok(taskService.findByFamilyGroup(familyGroup));
+    public ResponseEntity<Set<TaskDTO>> findTaskByFamilyGroup(@RequestParam(value = "family") Family family) {
+        return ResponseEntity.ok(taskService.findByFamily(family));
     }
 
     /**
@@ -81,7 +80,7 @@ public class TaskController {
      * @return a ResponseEntity containing the created Task
      */
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(taskService.add(taskDTO));
     }
 
@@ -92,7 +91,7 @@ public class TaskController {
      * @return a ResponseEntity containing the updated Task
      */
     @PutMapping
-    public ResponseEntity<Task> updateTask(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> updateTask(@RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(taskService.update(taskDTO));
     }
 

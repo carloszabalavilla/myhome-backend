@@ -1,8 +1,7 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.domain.model.dao.FamilyGroup;
-import com.czabala.myhome.domain.model.dto.FamilyGroupDTO;
-import com.czabala.myhome.service.database.FamilyGroupService;
+import com.czabala.myhome.domain.model.dto.FamilyDTO;
+import com.czabala.myhome.service.FamilyService;
 import com.czabala.myhome.util.mapper.JsonObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +15,17 @@ import java.util.Set;
  */
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/family-group")
-public class FamilyGroupController {
-    private final FamilyGroupService familyGroupService;
+@RequestMapping("/family")
+public class FamilyController {
+    private final FamilyService familyService;
 
     /**
      * Constructs a new FamilyGroupController with the specified FamilyGroupService.
      *
-     * @param familyGroupService the FamilyGroupService to be used by the FamilyGroupController
+     * @param familyService the FamilyGroupService to be used by the FamilyGroupController
      */
-    public FamilyGroupController(FamilyGroupService familyGroupService) {
-        this.familyGroupService = familyGroupService;
+    public FamilyController(FamilyService familyService) {
+        this.familyService = familyService;
     }
 
     /**
@@ -35,8 +34,8 @@ public class FamilyGroupController {
      * @return a ResponseEntity containing a Set of all FamilyGroups
      */
     @GetMapping
-    public ResponseEntity<Set<FamilyGroup>> findAllFamilyGroups() {
-        return ResponseEntity.ok(familyGroupService.findAll());
+    public ResponseEntity<Set<FamilyDTO>> findAllFamilyGroups() {
+        return ResponseEntity.ok(familyService.findAll());
     }
 
     /**
@@ -46,8 +45,8 @@ public class FamilyGroupController {
      * @return a ResponseEntity containing the FamilyGroup with the specified id
      */
     @GetMapping("/id")
-    public ResponseEntity<FamilyGroup> findFamilyGroupById(@RequestParam long id) {
-        return ResponseEntity.ok(familyGroupService.findById(id));
+    public ResponseEntity<FamilyDTO> findFamilyGroupById(@RequestParam long id) {
+        return ResponseEntity.ok(familyService.findById(id));
     }
 
     /**
@@ -57,8 +56,8 @@ public class FamilyGroupController {
      * @return a ResponseEntity containing the created FamilyGroup
      */
     @PostMapping
-    public ResponseEntity<FamilyGroup> createFamilyGroup(@RequestBody FamilyGroupDTO familyGroupDTO) {
-        return ResponseEntity.ok(familyGroupService.add(familyGroupDTO));
+    public ResponseEntity<FamilyDTO> createFamilyGroup(@RequestBody FamilyDTO familyGroupDTO) {
+        return ResponseEntity.ok(familyService.add(familyGroupDTO));
     }
 
     /**
@@ -68,8 +67,8 @@ public class FamilyGroupController {
      * @return a ResponseEntity containing the updated FamilyGroup
      */
     @PutMapping
-    public ResponseEntity<FamilyGroup> updateFamilyGroup(@RequestBody FamilyGroupDTO familyGroupDTO) {
-        return ResponseEntity.ok(familyGroupService.update(familyGroupDTO));
+    public ResponseEntity<FamilyDTO> updateFamilyGroup(@RequestBody FamilyDTO familyGroupDTO) {
+        return ResponseEntity.ok(familyService.update(familyGroupDTO));
     }
 
     /**
@@ -80,7 +79,7 @@ public class FamilyGroupController {
      */
     @DeleteMapping
     public ResponseEntity<String> deleteFamilyGroup(@RequestParam long id) {
-        familyGroupService.delete(id);
+        familyService.delete(id);
         return JsonObject.jsonMsgResponse(200, "Grupo familiar eliminado con exito");
     }
 }
