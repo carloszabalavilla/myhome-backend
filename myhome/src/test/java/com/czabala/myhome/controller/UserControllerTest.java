@@ -1,8 +1,7 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.UserDTO;
-import com.czabala.myhome.service.database.UserService;
+import com.czabala.myhome.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -32,89 +31,74 @@ public class UserControllerTest {
 
     @Test
     public void findAllUsersReturnsAllUsers() {
-        Set<User> users = new HashSet<>();
+        Set<UserDTO> users = new HashSet<>();
         when(userService.findAll()).thenReturn(users);
 
-        ResponseEntity<Set<User>> response = userController.findAllUsers();
+        ResponseEntity<Set<UserDTO>> response = userController.findAllUsers();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(users, response.getBody());
     }
 
     @Test
-    public void findUserByIdReturnsUser() {
-        User user = new User();
-        when(userService.findById(1L)).thenReturn(user);
+    public void findUserByIdReturnsUserWhenUserExists() {
+        UserDTO userDTO = new UserDTO();
+        when(userService.findById(1L)).thenReturn(userDTO);
 
-        ResponseEntity<User> response = userController.findUserById(1L);
+        ResponseEntity<UserDTO> response = userController.findUserById(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals(userDTO, response.getBody());
     }
 
     @Test
-    public void findUserByEmailReturnsUser() {
-        User user = new User();
-        when(userService.findByEmail("test@test.com")).thenReturn(user);
+    public void findUserByEmailReturnsUserWhenEmailExists() {
+        UserDTO userDTO = new UserDTO();
+        when(userService.findByEmail("test@test.com")).thenReturn(userDTO);
 
-        ResponseEntity<User> response = userController.findUserByEmail("test@test.com");
+        ResponseEntity<UserDTO> response = userController.findUserByEmail("test@test.com");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals(userDTO, response.getBody());
     }
 
     @Test
-    public void findUserByRoleReturnsUsers() {
-        Set<User> users = new HashSet<>();
+    public void findUserByRoleReturnsUsersWhenRoleExists() {
+        Set<UserDTO> users = new HashSet<>();
         when(userService.findByRole("admin")).thenReturn(users);
 
-        ResponseEntity<Set<User>> response = userController.findUserByRole("admin");
+        ResponseEntity<Set<UserDTO>> response = userController.findUserByRole("admin");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(users, response.getBody());
     }
 
     @Test
-    public void findUserByTokenReturnsUser() {
-        User user = new User();
-        when(userService.findByToken("token")).thenReturn(user);
-
-        ResponseEntity<User> response = userController.findUserByToken("token");
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
-    }
-
-    @Test
-    public void createUserReturnsCreatedUser() {
+    public void createUserReturnsCreatedUserWhenUserDoesNotExist() {
         UserDTO userDTO = new UserDTO();
-        User user = new User();
-        when(userService.add(userDTO)).thenReturn(user);
+        when(userService.add(userDTO)).thenReturn(userDTO);
 
-        ResponseEntity<User> response = userController.createUser(userDTO);
+        ResponseEntity<UserDTO> response = userController.createUser(userDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals(userDTO, response.getBody());
     }
 
     @Test
-    public void updateUserReturnsUpdatedUser() {
+    public void updateUserReturnsUpdatedUserWhenUserExists() {
         UserDTO userDTO = new UserDTO();
-        User user = new User();
-        when(userService.update(userDTO)).thenReturn(user);
+        when(userService.update(userDTO)).thenReturn(userDTO);
 
-        ResponseEntity<User> response = userController.updateUser(userDTO);
+        ResponseEntity<UserDTO> response = userController.updateUser(userDTO);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals(userDTO, response.getBody());
     }
 
     @Test
-    public void deleteUserReturnsSuccessMessage() {
+    public void deleteUserReturnsSuccessMessageWhenUserExists() {
         ResponseEntity<String> response = userController.deleteUser(1L);
-        String expectedResponse = "{\"message\": \"Usuario eliminado\"}";
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
     }
 }

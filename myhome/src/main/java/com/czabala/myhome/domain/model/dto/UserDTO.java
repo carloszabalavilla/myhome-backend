@@ -1,72 +1,48 @@
 package com.czabala.myhome.domain.model.dto;
 
-import com.czabala.myhome.domain.model.dao.FamilyGroup;
-import com.czabala.myhome.domain.model.enums.user.FamilyRole;
-import com.czabala.myhome.domain.model.enums.user.Fee;
-import com.czabala.myhome.domain.model.enums.user.Newsletter;
-import com.czabala.myhome.domain.model.enums.user.PaymentMethod;
-import com.czabala.myhome.util.security.TokenGenerator;
+import com.czabala.myhome.domain.model.dao.User;
+import com.czabala.myhome.util.security.Role;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.modelmapper.ModelMapper;
 
 import java.sql.Date;
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
     private long id;
-    private String name;
-    private String surname;
+    @NotNull
+    @Size(min = 5, max = 40)
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")
     private String email;
+    @NotNull
+    @Size(min = 8, max = 40)
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[a-zA-Z\\d!@#$%^&*]{8,}$")
     private String password;
-    private String role;
-    private String modules;
-    private String token;
-    private boolean confirmed;
-    private Timestamp tokenExpirationDate;
-    private Fee fee;
-    private int monthliesAmount;
-    private int monthliesPaid;
-    private PaymentMethod paymentMethod;
-    private String paymentDetails;
-    private String paymentToken;
-    private FamilyRole familyRole;
-    private String address;
+    @NotNull
+    private String firstName;
+    @NotNull
+    private String lastName;
+    @NotNull
     private Date birthDate;
+    private Role role;
+    private String address;
     private String phoneNumber;
-    private String avatar;
-    private Newsletter newsletter;
-    private FamilyGroup familyGroup;
+    private boolean newsletter;
 
-
-    public void registerUser() {
-        setName("0");
-        setSurname("0");
-        if (role == null || role.isEmpty()) {
-            setRole("USER");
-        }
-        setPassword(new BCryptPasswordEncoder().encode(password));
-        setModules("0");
-        setToken(TokenGenerator.generateToken());
-        setConfirmed(false);
-        setTokenExpirationDate(TokenGenerator.generateExpirationDate());
-        setFee(Fee.FREE);
-        setMonthliesAmount(0);
-        setMonthliesPaid(0);
-        setPaymentMethod(PaymentMethod.NONE);
-        setPaymentDetails("");
-        setPaymentToken("");
-        setFamilyRole(FamilyRole.NONE);
-        setAddress("");
-        setBirthDate(Date.valueOf(LocalDate.of(1900, 1, 1)));
-        setPhoneNumber("");
-        setAvatar("");
-        setNewsletter(Newsletter.NONE);
-        setFamilyGroup(null);
+    public User toUser() {
+        this.email = this.email.toLowerCase();
+        this.firstName = this.firstName.toLowerCase();
+        this.lastName = this.lastName.toLowerCase();
+        if (this.address != null)
+            this.address = this.address.toLowerCase();
+        return new ModelMapper().map(this, User.class);
     }
 }

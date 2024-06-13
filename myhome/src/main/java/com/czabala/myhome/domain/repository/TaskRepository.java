@@ -5,13 +5,11 @@ import com.czabala.myhome.domain.model.dao.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends CrudRepository<Task, Long> {
-    Set<Task> findAll();
+    Optional<Task> findById(long id);
 
-    Task findById(long id);
-
-    Set<Task> findByUser(User user);
+    Iterable<Task> findByUser(User user);
 }

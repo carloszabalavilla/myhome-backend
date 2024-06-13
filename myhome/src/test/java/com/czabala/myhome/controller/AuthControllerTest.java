@@ -1,8 +1,12 @@
 package com.czabala.myhome.controller;
 
 import com.czabala.myhome.domain.model.dao.User;
+import com.czabala.myhome.domain.model.dto.AuthenticationRequest;
+import com.czabala.myhome.domain.model.dto.AuthenticationResponse;
 import com.czabala.myhome.domain.model.dto.UserDTO;
-import com.czabala.myhome.service.database.UserService;
+import com.czabala.myhome.service.AuthenticationService;
+import com.czabala.myhome.service.UserService;
+import com.czabala.myhome.util.mapper.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,7 +15,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 public class AuthControllerTest {
@@ -22,80 +29,88 @@ public class AuthControllerTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private AuthenticationService authenticationService;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void userLoginReturnsUserWithToken() {
-        UserDTO userDTO = new UserDTO();
-        User user = new User();
-        user.setToken("Bearer token");
-        when(userService.login(userDTO)).thenReturn(user);
+    public void loginReturnsUserWithTokenWhenCredentialsAreValid() {
+        AuthenticationRequest request = new AuthenticationRequest("test@test.com", "password");
+        AuthenticationResponse expectedResponse = new AuthenticationResponse("token", new User().toDTO());
+        when(authenticationService.login(request)).thenReturn(expectedResponse);
 
-        ResponseEntity<User> response = authController.userLogin(userDTO);
+        ResponseEntity<AuthenticationResponse> response = authController.login(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
-        assertEquals("token", response.getHeaders().get("Authorization").get(0));
+        assertEquals(expectedResponse, response.getBody());
     }
 
     @Test
-    public void createUserReturnsCreatedUser() {
+    public void createUserReturnsCreatedUserWhenUserDoesNotExist() {
         UserDTO userDTO = new UserDTO();
-        User user = new User();
-        when(userService.add(userDTO)).thenReturn(user);
+        when(userService.add(userDTO)).thenReturn(userDTO);
 
-        ResponseEntity<?> response = authController.createUser(userDTO);
+        ResponseEntity<String> response = authController.createUser(userDTO);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(user, response.getBody());
     }
 
     @Test
-    public void forgotPasswordReturnsSuccessMessage() {
+    public void startRecoveryReturnsSuccessMessageWhenEmailExists() {
         String email = "test@test.com";
-        String expectedResponse = "{\"message\": \"Se ha enviado un correo con las instrucciones para recuperar la contraseña\"}";
+        doNothing().when(userService).startChangePassword(email);
 
-        ResponseEntity<?> response = authController.forgotPassword(email);
+        ResponseEntity<String> response = authController.startRecovery(email);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
     }
 
     @Test
-    public void changePasswordReturnsSuccessMessage() {
-        String email = "test@test.com";
-        String password = "newPassword";
-        String expectedResponse = "{\"message\": \"Se ha cambiado la contraseña con exito\"}";
+    public void checkRecoveryReturnsUserDataWhenTokenIsValid() {
+        String jwt = "token";
+       UserDTO userDTO = new UserDTO();
+        when(userService.letChangePassword(jwt)).thenReturn(userDTO);
+
+        ResponseEntity<UserDTO> response = authController.checkRecovery(jwt);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(userDTO, response.getBody());
+    }
+
+    @Test
+    public void changePasswordReturnsUpdatedUserDataWhenTokenIsValid() {
+        String jwt = "token";
+        AuthenticationRequest auth = new AuthenticationRequest("test@test.com", "newPassword");
         UserDTO userDTO = new UserDTO();
-        userDTO.setPassword(password);
-        ResponseEntity<?> response = authController.changePassword(email, userDTO);
+        when(userService.changePassword(jwt, auth)).thenReturn(userDTO);
+
+        ResponseEntity<UserDTO> response = authController.changePassword(jwt, auth);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
+        assertEquals(userDTO, response.getBody());
     }
 
     @Test
-    public void confirmUserReturnsSuccessMessage() {
-        String token = "token";
-        String expectedResponse = "{\"message\": \"Usuario confirmado con exito\"}";
-
-        ResponseEntity<?> response = authController.confirmUser(token);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
-    }
-
-    @Test
-    public void resendConfirmationReturnsSuccessMessage() {
+    public void resendConfirmationReturnsSuccessMessageWhenEmailExists() {
         String email = "test@test.com";
-        String expectedResponse = "{\"message\": \"Se ha reenviado el correo de confirmación\"}";
+        doNothing().when(userService).resendConfirmation(email);
 
-        ResponseEntity<?> response = authController.resendConfirmation(email);
+        ResponseEntity<String> response = authController.resendConfirmation(email);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
+    }
+
+    @Test
+    public void confirmUserReturnsSuccessMessageWhenTokenIsValid() {
+        Map<String, Object> jwt = Map.of("token", "token");
+        when(userService.confirmEmail(jwt.get("token").toString())).thenReturn(new UserDTO());
+
+        ResponseEntity<String> response = authController.confirmUser(jwt);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }

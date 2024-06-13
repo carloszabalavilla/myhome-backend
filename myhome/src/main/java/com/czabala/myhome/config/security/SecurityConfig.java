@@ -1,114 +1,80 @@
 package com.czabala.myhome.config.security;
 
-import com.czabala.myhome.service.UserDetailsServiceImpl;
+import com.czabala.myhome.config.security.filter.JwtAuthenticationFilter;
+import com.czabala.myhome.util.security.Permission;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.http.HttpMethod.DELETE;
 
+/**
+ * SecurityConfig is a configuration class that sets up the Spring Security filter chain.
+ */
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
-@Configuration
+@Component
 public class SecurityConfig {
+    @Autowired
+    private AuthenticationProvider authenticationProvider;
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
-    }
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    /**
+     * This method configures the Spring Security filter chain.
+     * It disables CSRF protection, sets the session creation policy to stateless, sets the authentication provider,
+     * adds the JWT authentication filter before the username/password authentication filter,
+     * and configures the authorization rules for various request matchers.
+     *
+     * @param http the HttpSecurity object to configure
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs during configuration
+     */
     @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .anyRequest().permitAll()
-                )
-                .csrf(AbstractHttpConfigurer::disable
-                ).cors((cors) -> cors
-                        .configurationSource(apiConfigurationSource()))
-                .httpBasic(withDefaults());
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(authConfig -> {
+                    authConfig.requestMatchers("/auth/**", "/error")
+                            .permitAll();
+                    authConfig.requestMatchers("/user/**", "/task/**", "/family/**", "/finance/**")
+                            .hasAnyAuthority(Permission.ALL_USER.name(), Permission.ALL_PERMISSION.name());
+                    authConfig.requestMatchers("/admin/**")
+                            .hasAuthority(Permission.ALL_PERMISSION.name());
+                    authConfig.requestMatchers(DELETE)
+                            .hasAuthority(Permission.ALL_PERMISSION.name());
+                    authConfig.anyRequest()
+                            .denyAll();
+                });
+
         return http.build();
     }
 
-    CorsConfigurationSource apiConfigurationSource() {
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-/*    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
-                .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                                .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-                                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                                .requestMatchers("/auth/**").permitAll()
-                                .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        //http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-        //http.addFilterBefore(new AuthorizationErrorFilter(new ObjectMapper()), );
-        return http.build();
-    }
-    */
-
-/*
-    @Bean
-    public UserDetailsService userDetailsService(BCryptPasswordEncoder bCryptPasswordEncoder) {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user")
-                .password(bCryptPasswordEncoder.encode("userPass"))
-                .roles("USER")
-                .build());
-        manager.createUser(User.withUsername("admin")
-                .password(bCryptPasswordEncoder.encode("adminPass"))
-                .roles("USER", "ADMIN")
-                .build());
-        return manager;
-    }
-
-
-    private Collection<? extends GrantedAuthority> getAuthorities(
-            Collection<Role> roles) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
-            authorities.addAll(role.getRoleValue()
-                    .stream()
-                    .map(p -> new SimpleGrantedAuthority(p.getCanonicalName()))
-                    .toList());
-        }
-        return authorities;
-    }
-
-
-
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return new ProviderManager(authenticationProvider);
-    }*/
 }
-

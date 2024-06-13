@@ -1,20 +1,18 @@
 package com.czabala.myhome.domain.repository;
 
 import com.czabala.myhome.domain.model.dao.User;
+import com.czabala.myhome.util.security.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-    Set<User> findAll();
+    Optional<User> findById(long id);
 
-    User findById(long id);
+    Iterable<User> findByRole(Role role);
 
-    Set<User> findByRole(String role);
+    Optional<User> findByEmail(String email);
 
-    User findByEmail(String email);
-
-    User findByToken(String token);
 }

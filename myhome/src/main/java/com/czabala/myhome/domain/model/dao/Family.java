@@ -1,11 +1,13 @@
 package com.czabala.myhome.domain.model.dao;
 
+import com.czabala.myhome.domain.model.dto.FamilyDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.modelmapper.ModelMapper;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -13,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "family_group")
-public class FamilyGroup {
+public class Family {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,8 +25,11 @@ public class FamilyGroup {
     private String name;
     @Column
     private String description;
-    @OneToMany(mappedBy = "familyGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     @ToString.Exclude
-    private List<User> users;
+    private Set<User> users;
 
+    public FamilyDTO toDTO() {
+        return new ModelMapper().map(this, FamilyDTO.class);
+    }
 }

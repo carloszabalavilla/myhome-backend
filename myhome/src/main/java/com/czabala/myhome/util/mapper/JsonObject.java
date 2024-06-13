@@ -3,6 +3,7 @@ package com.czabala.myhome.util.mapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class JsonObject {
     private String jsonKey;
     private String jsonValue;
@@ -52,17 +54,6 @@ public class JsonObject {
     public static ResponseEntity<String> jsonMsgResponse(int status, String message) {
         return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(new JsonObject(message).toString());
     }
-
-//    public static Map<String, String> jsonToMap(String json) {
-//        return json.substring(1, json.length() - 1).chars()
-//                .mapToObj(c -> (char) c)
-//                .collect(Collectors.groupingBy(c -> c == ':' || c == ',' ? "separator" : "value",
-//                        Collectors.mapping(c -> c.toString(), Collectors.joining())))
-//                .entrySet().stream()
-//                .filter(e -> e.getKey().equals("value"))
-//                .collect(Collectors.toMap(e -> e.getValue().substring(1, e.getValue().length() - 1).split("\",\"")[0],
-//                        e -> e.getValue().substring(1, e.getValue().length() - 1).split("\",\"")[1]));
-//    }
 
     /**
      * Converts this JSON object to a string.
