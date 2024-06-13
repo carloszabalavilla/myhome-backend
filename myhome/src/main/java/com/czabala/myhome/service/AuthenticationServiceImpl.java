@@ -1,8 +1,8 @@
 package com.czabala.myhome.service;
 
 import com.czabala.myhome.domain.model.dao.User;
-import com.czabala.myhome.domain.model.dto.AuthenthicationRequest;
-import com.czabala.myhome.domain.model.dto.AuthenthicationResponse;
+import com.czabala.myhome.domain.model.dto.AuthenticationRequest;
+import com.czabala.myhome.domain.model.dto.AuthenticationResponse;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.util.exception.ConflictInDatabaseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private UserRepository userRepository;
 
     @Override
-    public AuthenthicationResponse login(AuthenthicationRequest req) {
+    public AuthenticationResponse login(AuthenticationRequest req) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword()));
 
         User user = userRepository.findByEmail(req.getEmail()).orElseThrow();
@@ -36,6 +36,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         String jwt = jwtService.generateToken(user);
 
-        return new AuthenthicationResponse(jwt);
+        return new AuthenticationResponse(jwt,user.toDTO());
     }
 }

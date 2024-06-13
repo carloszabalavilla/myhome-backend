@@ -11,7 +11,7 @@
 
     <groupId>com.czabala</groupId>
     <artifactId>myhome</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <name>myhome</name>
     <description>ApiREST for MyHome application</description>
 

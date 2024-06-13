@@ -2,14 +2,14 @@ package com.czabala.myhome.service;
 
 import java.util.Set;
 
-public interface Service<U> {
-    Set<U> findAll();
+public interface Service<T> {
+    Set<T> findAll();
 
-    U findById(long id);
+    T findById(long id);
 
-    U add(U u);
+    T add(T t);
 
-    U update(U u);
+    T update(T t);
 
     void delete(long id);
 

@@ -1,7 +1,7 @@
 package com.czabala.myhome.service;
 
 import com.czabala.myhome.domain.model.dao.User;
-import com.czabala.myhome.domain.model.dto.AuthenthicationRequest;
+import com.czabala.myhome.domain.model.dto.AuthenticationRequest;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.util.exception.ConflictInDatabaseException;
@@ -49,6 +49,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean checkUser(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
     public UserDTO add(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new ConflictInDatabaseException("El email ya está registrado");
@@ -72,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void startChangePassword(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        String token = jwtService.generateToken(user);
+        String token = jwtService.generateOneHourToken(user);
         emailSender.sendChangePasswordMessage(user.getEmail(), token);
     }
 
@@ -82,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO changePassword(String jwt, AuthenthicationRequest auth) {
+    public UserDTO changePassword(String jwt, AuthenticationRequest auth) {
         User user = userRepository.findByEmail(jwtService.getEmailFromToken(jwt)).orElseThrow();
         if (!user.getEmail().equals(auth.getEmail())) {
             throw new JwtException("El email no coincide con el token");
@@ -92,7 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private void startConfirmationProcess(User user) {
-        String token = jwtService.generateToken(user);
+        String token = jwtService.generateOneHourToken(user);
         emailSender.sendConfirmationMessage(user.getEmail(), token);
     }
 

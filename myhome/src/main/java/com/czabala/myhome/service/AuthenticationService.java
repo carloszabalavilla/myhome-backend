@@ -1,9 +1,9 @@
 package com.czabala.myhome.service;
 
-import com.czabala.myhome.domain.model.dto.AuthenthicationRequest;
-import com.czabala.myhome.domain.model.dto.AuthenthicationResponse;
+import com.czabala.myhome.domain.model.dto.AuthenticationRequest;
+import com.czabala.myhome.domain.model.dto.AuthenticationResponse;
 
 public interface AuthenticationService {
 
-    AuthenthicationResponse login(AuthenthicationRequest authenthicationRequest);
+    AuthenticationResponse login(AuthenticationRequest authenticationRequest);
 }

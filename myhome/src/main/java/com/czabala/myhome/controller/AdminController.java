@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
  * It provides endpoints for finding all admins, adding a user as an admin, removing admin role from a user, and deleting an admin.
  */
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/admin")
 public class AdminController {
 //    private final UserService userService;

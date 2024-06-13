@@ -1,10 +1,12 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.domain.model.dto.AuthenthicationRequest;
-import com.czabala.myhome.domain.model.dto.AuthenthicationResponse;
+import com.czabala.myhome.domain.model.dao.User;
+import com.czabala.myhome.domain.model.dto.AuthenticationRequest;
+import com.czabala.myhome.domain.model.dto.AuthenticationResponse;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.service.AuthenticationService;
 import com.czabala.myhome.service.UserService;
+import com.czabala.myhome.util.mapper.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
@@ -35,11 +39,11 @@ public class AuthControllerTest {
 
     @Test
     public void loginReturnsUserWithTokenWhenCredentialsAreValid() {
-        AuthenthicationRequest request = new AuthenthicationRequest("test@test.com", "password");
-        AuthenthicationResponse expectedResponse = new AuthenthicationResponse("token");
+        AuthenticationRequest request = new AuthenticationRequest("test@test.com", "password");
+        AuthenticationResponse expectedResponse = new AuthenticationResponse("token", new User().toDTO());
         when(authenticationService.login(request)).thenReturn(expectedResponse);
 
-        ResponseEntity<AuthenthicationResponse> response = authController.login(request);
+        ResponseEntity<AuthenticationResponse> response = authController.login(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(expectedResponse, response.getBody());
@@ -68,7 +72,7 @@ public class AuthControllerTest {
     @Test
     public void checkRecoveryReturnsUserDataWhenTokenIsValid() {
         String jwt = "token";
-        UserDTO userDTO = new UserDTO();
+       UserDTO userDTO = new UserDTO();
         when(userService.letChangePassword(jwt)).thenReturn(userDTO);
 
         ResponseEntity<UserDTO> response = authController.checkRecovery(jwt);
@@ -80,7 +84,7 @@ public class AuthControllerTest {
     @Test
     public void changePasswordReturnsUpdatedUserDataWhenTokenIsValid() {
         String jwt = "token";
-        AuthenthicationRequest auth = new AuthenthicationRequest("test@test.com", "newPassword");
+        AuthenticationRequest auth = new AuthenticationRequest("test@test.com", "newPassword");
         UserDTO userDTO = new UserDTO();
         when(userService.changePassword(jwt, auth)).thenReturn(userDTO);
 
@@ -102,8 +106,8 @@ public class AuthControllerTest {
 
     @Test
     public void confirmUserReturnsSuccessMessageWhenTokenIsValid() {
-        String jwt = "token";
-        when(userService.confirmEmail(jwt)).thenReturn(new UserDTO());
+        Map<String, Object> jwt = Map.of("token", "token");
+        when(userService.confirmEmail(jwt.get("token").toString())).thenReturn(new UserDTO());
 
         ResponseEntity<String> response = authController.confirmUser(jwt);
 

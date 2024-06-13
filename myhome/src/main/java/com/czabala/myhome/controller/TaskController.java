@@ -1,6 +1,7 @@
 package com.czabala.myhome.controller;
 
 import com.czabala.myhome.domain.model.dao.Family;
+import com.czabala.myhome.domain.model.dao.Task;
 import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.TaskDTO;
 import com.czabala.myhome.service.TaskService;
@@ -16,7 +17,6 @@ import java.util.Set;
  * creating a task, updating a task, and deleting a task.
  */
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/task")
 public class TaskController {
     private final TaskService taskService;
@@ -36,7 +36,7 @@ public class TaskController {
      * @return a ResponseEntity containing a Set of all Tasks
      */
     @GetMapping
-    public ResponseEntity<Set<TaskDTO>> findAllTasks() {
+    public ResponseEntity<Set<Task>> findAllTasks() {
         return ResponseEntity.ok(taskService.findAll());
     }
 
@@ -47,19 +47,19 @@ public class TaskController {
      * @return a ResponseEntity containing the Task with the specified id
      */
     @GetMapping("/id")
-    public ResponseEntity<TaskDTO> findTaskById(@RequestParam long id) {
+    public ResponseEntity<Task> findTaskById(@RequestParam long id) {
         return ResponseEntity.ok(taskService.findById(id));
     }
 
     /**
      * Handles a GET request to find tasks by user.
      *
-     * @param user the user of the tasks to find
+     * @param id the user id of the tasks to find
      * @return a ResponseEntity containing a Set of Tasks with the specified user
      */
     @GetMapping("/user")
-    public ResponseEntity<Set<TaskDTO>> findTaskByUser(@RequestBody User user) {
-        return ResponseEntity.ok(taskService.findByUser(user));
+    public ResponseEntity<Set<Task>> findTaskByUser(@RequestParam long id) {
+        return ResponseEntity.ok(taskService.findByUser(id));
     }
 
     /**
@@ -69,7 +69,7 @@ public class TaskController {
      * @return a ResponseEntity containing a Set of Tasks with the specified family group
      */
     @GetMapping("/family-group")
-    public ResponseEntity<Set<TaskDTO>> findTaskByFamilyGroup(@RequestParam(value = "family") Family family) {
+    public ResponseEntity<Set<Task>> findTaskByFamilyGroup(@RequestParam Family family) {
         return ResponseEntity.ok(taskService.findByFamily(family));
     }
 
@@ -80,8 +80,8 @@ public class TaskController {
      * @return a ResponseEntity containing the created Task
      */
     @PostMapping
-    public ResponseEntity<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(taskService.add(taskDTO));
+    public ResponseEntity<Task> createTask(@RequestBody TaskDTO taskDTO) {
+        return ResponseEntity.ok(taskService.add(taskDTO.toTask()));
     }
 
     /**
@@ -91,8 +91,8 @@ public class TaskController {
      * @return a ResponseEntity containing the updated Task
      */
     @PutMapping
-    public ResponseEntity<TaskDTO> updateTask(@RequestBody TaskDTO taskDTO) {
-        return ResponseEntity.ok(taskService.update(taskDTO));
+    public ResponseEntity<Task> updateTask(@RequestBody TaskDTO taskDTO) {
+        return ResponseEntity.ok(taskService.update(taskDTO.toTask()));
     }
 
     /**

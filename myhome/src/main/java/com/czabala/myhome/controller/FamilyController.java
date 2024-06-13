@@ -14,7 +14,6 @@ import java.util.Set;
  * creating a family group, updating a family group, and deleting a family group.
  */
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/family")
 public class FamilyController {
     private final FamilyService familyService;

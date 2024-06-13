@@ -5,6 +5,7 @@ import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -56,6 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             } catch (ExpiredJwtException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "El token ha expirado");
+            } catch(JwtException e){
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "El token es inválido");
             }
         }
         chain.doFilter(request, response);
@@ -68,7 +71,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @return the claims from the JWT token if it is valid, null otherwise
      */
     private Claims validateToken(String auth) {
-
         return Jwts
                 .parser()
                 .verifyWith(jwtService.generateSecretKey())

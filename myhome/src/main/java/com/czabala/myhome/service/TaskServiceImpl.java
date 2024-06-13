@@ -27,39 +27,39 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Set<TaskDTO> findAll() {
-        return toTaskDTO(taskRepository.findAll());
+    public Set<Task> findAll() {
+        return toSetTask(taskRepository.findAll());
     }
 
     @Override
-    public TaskDTO findById(long id) {
-        return taskRepository.findById(id).orElseThrow().toDTO();
+    public Task findById(long id) {
+        return taskRepository.findById(id).orElseThrow();
     }
 
     @Override
-    public Set<TaskDTO> findByUser(User user) {
-        return toTaskDTO(taskRepository.findByUser(user));
+    public Set<Task> findByUser(long id) {
+        User user = userRepository.findById(id).orElseThrow();
+        return toSetTask(taskRepository.findByUser(user));
     }
 
     @Override
-    public Set<TaskDTO> findByFamily(Family family) {
+    public Set<Task> findByFamily(Family family) {
         return family.getUsers().stream()
                 .flatMap(user -> StreamSupport.stream(taskRepository.findByUser(user).spliterator(), false))
-                .map(Task::toDTO)
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public TaskDTO add(TaskDTO taskDTO) {
+    public Task add(Task taskDTO) {
         if (taskRepository.findById(taskDTO.getId()).isPresent()) {
             throw new ConflictInDatabaseException("Tarea ya creada");
         }
-        return taskRepository.save(taskDTO.toTask()).toDTO();
+        return taskRepository.save(taskDTO);
     }
 
     @Override
-    public TaskDTO update(TaskDTO taskDTO) {
-        return taskRepository.save(taskDTO.toTask()).toDTO();
+    public Task update(Task taskDTO) {
+        return taskRepository.save(taskDTO);
     }
 
     @Override
@@ -70,6 +70,11 @@ public class TaskServiceImpl implements TaskService {
     private Set<TaskDTO> toTaskDTO(Iterable<Task> tasks) {
         return StreamSupport.stream(tasks.spliterator(), false)
                 .map(Task::toDTO)
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Task> toSetTask(Iterable<Task> tasks) {
+        return StreamSupport.stream(tasks.spliterator(), false)
                 .collect(Collectors.toSet());
     }
 }

@@ -34,9 +34,22 @@ public class JwtService {
     }
 
     public String generateToken(User user) {
-
         Date issuedAt = new Date(System.currentTimeMillis());
         Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRATION_TIME);
+        return Jwts.builder()
+                .claims(generateExtraClaims(user))
+                .subject(user.getEmail())
+                .issuedAt(issuedAt)
+                .expiration(expiration)
+                .header().add(Header.TYPE, Header.JWT_TYPE)
+                .and()
+                .signWith(generateKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateOneHourToken(User user) {
+        Date issuedAt = new Date(System.currentTimeMillis());
+        Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60);
         return Jwts.builder()
                 .claims(generateExtraClaims(user))
                 .subject(user.getEmail())

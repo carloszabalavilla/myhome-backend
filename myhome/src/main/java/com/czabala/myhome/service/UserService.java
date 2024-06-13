@@ -1,6 +1,6 @@
 package com.czabala.myhome.service;
 
-import com.czabala.myhome.domain.model.dto.AuthenthicationRequest;
+import com.czabala.myhome.domain.model.dto.AuthenticationRequest;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 
 import java.util.Set;
@@ -10,11 +10,13 @@ public interface UserService extends Service<UserDTO> {
 
     Set<UserDTO> findByRole(String role);
 
+    boolean checkUser(String email);
+
     void startChangePassword(String email);
 
     UserDTO letChangePassword(String jwt);
 
-    UserDTO changePassword(String jwt, AuthenthicationRequest auth);
+    UserDTO changePassword(String jwt, AuthenticationRequest auth);
 
     void resendConfirmation(String email);
 

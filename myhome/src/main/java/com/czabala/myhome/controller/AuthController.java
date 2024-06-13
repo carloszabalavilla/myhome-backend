@@ -1,7 +1,7 @@
 package com.czabala.myhome.controller;
 
-import com.czabala.myhome.domain.model.dto.AuthenthicationRequest;
-import com.czabala.myhome.domain.model.dto.AuthenthicationResponse;
+import com.czabala.myhome.domain.model.dto.AuthenticationRequest;
+import com.czabala.myhome.domain.model.dto.AuthenticationResponse;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.service.AuthenticationService;
 import com.czabala.myhome.service.UserService;
@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * AuthController is a REST controller that handles authentication related requests.
@@ -26,12 +28,23 @@ public class AuthController {
     /**
      * Handles a POST request for user login.
      *
-     * @param authenthicationRequest the UserDTO containing the user's login information
+     * @param authenticationRequest the UserDTO containing the user's login information
      * @return a ResponseEntity containing the jwt
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthenthicationResponse> login(@RequestBody @Valid AuthenthicationRequest authenthicationRequest) {
-        return ResponseEntity.ok(authenticationService.login(authenthicationRequest));
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
+        return ResponseEntity.ok(authenticationService.login(authenticationRequest));
+    }
+
+    /**
+     * Handles a GET request to check if a user exists.
+     *
+     * @param email the email of the user to check
+     * @return a ResponseEntity containing a boolean indicating if the user exists
+     */
+    @GetMapping("/check/{email}")
+    public ResponseEntity<Boolean> checkEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.checkUser(email));
     }
 
     /**
@@ -59,9 +72,9 @@ public class AuthController {
     }
 
     /**
-     * Handles a GET request to check if a password recovery token is valid.
+     * Handles a POST request to check if a password recovery token is valid.
      *
-     * @param jwt the password recovery token
+     * @param jwt the json password recovery token
      * @return a ResponseEntity containing the user data if the token is valid
      */
     @GetMapping("/recovery-password/let")
@@ -77,7 +90,7 @@ public class AuthController {
      * @return a ResponseEntity containing the updated user data
      */
     @PostMapping("/recovery-password/change")
-    public ResponseEntity<UserDTO> changePassword(@RequestHeader("Authorization") String jwt, @RequestBody @Valid AuthenthicationRequest auth) {
+    public ResponseEntity<UserDTO> changePassword(@RequestHeader("Authorization") String jwt, @RequestBody @Valid AuthenticationRequest auth) {
         return ResponseEntity.ok(userService.changePassword(jwt, auth));
     }
 
@@ -96,12 +109,12 @@ public class AuthController {
     /**
      * Handles a PUT request to confirm a user's account.
      *
-     * @param jwt the confirmation token. This is a request parameter that is part of the URL.
+     * @param token the confirmation token. This is a request body.
      * @return a ResponseEntity containing a message indicating that the user has been confirmed. The status code of the ResponseEntity is 200.
      */
     @PutMapping("/confirm")
-    public ResponseEntity<String> confirmUser(@RequestHeader("Authorization") String jwt) {
-        userService.confirmEmail(jwt);
+    public ResponseEntity<String> confirmUser(@RequestBody Map<String, Object> token) {
+        userService.confirmEmail(token.get("token").toString());
         return JsonObject.jsonMsgResponse(200, "Usuario confirmado con exito");
     }
 }

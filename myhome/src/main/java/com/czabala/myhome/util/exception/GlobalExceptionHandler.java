@@ -4,6 +4,7 @@ import com.czabala.myhome.util.mapper.JsonObject;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 
 @ControllerAdvice
@@ -25,7 +27,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return JsonObject.jsonMsgResponse(400, ex.getMessage());
+        return JsonObject.jsonMsgResponse(400, "Campo no valido: "
+                + Objects.requireNonNull(ex.getBindingResult().getFieldError()).getField()
+                + " - " + ex.getBindingResult().getFieldError().getDefaultMessage());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return JsonObject.jsonMsgResponse(400, "Cuerpo de la peticion no valido");
     }
 
     @ExceptionHandler(JwtException.class)
@@ -59,7 +68,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
-    public ResponseEntity<String> handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
+    public ResponseEntity<String> handleInternalAuthenticationServiceException(
+            InternalAuthenticationServiceException ex
+    ) {
         return JsonObject.jsonMsgResponse(404, ex.getMessage());
     }
 
