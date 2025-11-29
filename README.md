@@ -5,14 +5,21 @@ Parent repository: https://github.com/carloszabalavilla/myhome
 
 ## Credentials
 
-mysql database credentials:
+MySQL database credentials:
 
 - user: czabdev
 - password: rukia1225dev
-  virtual desktop conn
+
+Virtual desktop conn:
+
 - user: Develop
 - rukia1225dev
 
+Superadmin API credentials:
+
+- user: czabaladev@gmail.com
+- password: Rukia1225dev!
+
 ## Developers involved
 
-czabdev (Carlos Zabala)
+- czabdev (Carlos Zabala)
