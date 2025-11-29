@@ -19,7 +19,7 @@ public class FamilyGroup {
     @Column(name = "id", nullable = false)
     @JdbcTypeCode(SqlTypes.BIGINT)
     private Long id;
-    @Column
+    @Column(nullable = false)
     private String name;
     @Column
     private String description;

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For the
 syntax: [File.md sintaxis](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
+## [1.0.0] - 2024-05-14
+
+### Added
+
+First version of the api with the following features (still not tested):
+
+- Controllers defined and tested with tests
+- Services implemented
+- Repositories implemented
+- Entities defined
+- DTOs defined
+- Mappers defined
+- Exceptions defined
+
+Next steps: configure spring security, add more features to the api, add more tests, add more documentation.
+
 ## [0.1.0] - 2024-04-24
 
 ### Added

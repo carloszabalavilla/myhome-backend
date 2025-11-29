@@ -5,19 +5,18 @@ import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.domain.repository.UserRepository;
 import com.czabala.myhome.service.EmailService;
 import com.czabala.myhome.util.exception.AuthErrorException;
+import com.czabala.myhome.util.exception.EntityNotFoundException;
+import com.czabala.myhome.util.exception.InvalidFieldException;
 import com.czabala.myhome.util.exception.TokenValidationException;
-import com.czabala.myhome.util.exception.UserNotFoundException;
 import com.czabala.myhome.util.security.TokenGenerator;
 import com.czabala.myhome.util.validator.EmailValidator;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Set;
 
+//TODO: Remove sensitive information before send back to client
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -28,16 +27,11 @@ public class UserServiceImpl implements UserService {
         this.emailService = emailService;
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
     @Override
     public Set<User> findAll() {
         Set<User> users = userRepository.findAll();
         if (users.isEmpty()) {
-            throw new UserNotFoundException("No hay usuarios registrados");
+            throw new EntityNotFoundException("No hay usuarios registrados");
         }
         return users;
     }
@@ -46,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public User findById(long id) {
         User user = userRepository.findById(id);
         if (user == null) {
-            throw new UserNotFoundException("Usuario no encontrado.");
+            throw new EntityNotFoundException("Usuario no encontrado");
         }
         return userRepository.findById(id);
     }
@@ -56,7 +50,7 @@ public class UserServiceImpl implements UserService {
         EmailValidator.validateEmail(email);
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UserNotFoundException("Usuario no encontrado.");
+            throw new EntityNotFoundException("Usuario no encontrado");
         }
         return userRepository.findByEmail(email);
     }
@@ -65,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public Set<User> findByRole(String role) {
         Set<User> users = userRepository.findByRole(role);
         if (users == null || users.isEmpty()) {
-            throw new UserNotFoundException("No hay usuarios con el rol " + role + " registrados.");
+            throw new EntityNotFoundException("No hay usuarios con el rol " + role + " registrados");
         }
         return users;
     }
@@ -74,40 +68,26 @@ public class UserServiceImpl implements UserService {
     public User findByToken(String token) {
         User user = userRepository.findByToken(token);
         if (user == null) {
-            throw new UserNotFoundException("Usuario no encontrado.");
+            throw new EntityNotFoundException("Usuario no encontrado");
         }
         return user;
     }
 
     @Override
-    public void resendConfirmation(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException("Usuario no encontrado.");
-        }
-        if (user.isConfirmed()) {
-            throw new AuthErrorException("Usuario ya confirmado");
-        }
-        startConfirmationProcess(user);
-    }
-
-    @Override
     public User add(UserDTO userDTO) {
-        try {
-            findByEmail(userDTO.getEmail());
-            return null;
-        } catch (UserNotFoundException e) {
-            userDTO.registerUser();
-            User newUser = new ModelMapper().map(userDTO, User.class);
-            startConfirmationProcess(newUser);
-            return userRepository.save(newUser);
+        if (findByEmail(userDTO.getEmail()) != null) {
+            throw new InvalidFieldException("El email ya está registrado");
         }
+        userDTO.registerUser();
+        User newUser = new ModelMapper().map(userDTO, User.class);
+        startConfirmationProcess(newUser);
+        return userRepository.save(newUser);
     }
 
     @Override
     public User update(UserDTO userDTO) {
-        if (findById(userDTO.getId()) == null) {
-            throw new UserNotFoundException("Usuario no encontrado.");
+        if ((findById(userDTO.getId())) == null) {
+            throw new EntityNotFoundException("Usuario no encontrado.");
         }
         User user = new ModelMapper().map(userDTO, User.class);
         return userRepository.save(user);
@@ -115,19 +95,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(long id) {
-        if (userRepository.findById(id) == null) {
-            throw new UserNotFoundException("Usuario no encontrado.");
-        }
+        findById(id);
         userRepository.deleteById(id);
     }
 
     public User login(UserDTO userDTO) {
         User user = userRepository.findByEmail(userDTO.getEmail());
-        BCryptPasswordEncoder bCryptPasswordEncoder  = new BCryptPasswordEncoder();
-        if (user == null) {
-            throw new UserNotFoundException("Usuario no encontrado o contraseña incorrecta");
-        } else if (!bCryptPasswordEncoder.matches(userDTO.getPassword(), user.getPassword())){
-            throw new AuthErrorException("Contraseña incorrecta");
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        if (user == null || !bCryptPasswordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
+            throw new AuthErrorException("Credenciales invalidas");
         } else if (!user.isConfirmed()) {
             throw new TokenValidationException("Usuario no confirmado");
         }
@@ -138,7 +114,7 @@ public class UserServiceImpl implements UserService {
     public void recoveryPassword(String email) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new UserNotFoundException("Usuario no encontrado");
+            throw new EntityNotFoundException("Usuario no encontrado");
         }
         String token = TokenGenerator.generateToken();
         user.setToken(token);
@@ -147,21 +123,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(UserDTO userDTO) {
-        User user = userRepository.findByToken(userDTO.getToken());
-        if (user == null || !user.validateToken(userDTO.getToken()) || user.isTokenExpired()) {
-            throw new TokenValidationException("Token de confirmación no válido o expirado");
+    public void changePassword(String email, String password) {
+        // Check password strength
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new InvalidFieldException("El email no está registrado");
         }
-        user.setPassword(userDTO.getPassword());
-        user.setToken("-1");
-        user.setTokenExpirationDate(Timestamp.valueOf(LocalDateTime.now()));
+        user.setPassword(password);
         userRepository.save(user);
+    }
+
+    @Override
+    public void resendConfirmation(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new EntityNotFoundException("Usuario no encontrado");
+        } else if (user.isConfirmed()) {
+            throw new AuthErrorException("Usuario ya confirmado");
+        }
+        startConfirmationProcess(user);
     }
 
     private void startConfirmationProcess(User user) {
         String token = TokenGenerator.generateToken();
         user.setToken(token);
         user.setTokenExpirationDate(TokenGenerator.generateExpirationDate());
+        userRepository.save(user);
         emailService.sendConfirmationMessage(user.getEmail(), token);
     }
 
@@ -172,7 +159,6 @@ public class UserServiceImpl implements UserService {
         }
         user.setConfirmed(true);
         user.setToken(null);
-        user.setTokenExpirationDate(null);
         userRepository.save(user);
     }
 }

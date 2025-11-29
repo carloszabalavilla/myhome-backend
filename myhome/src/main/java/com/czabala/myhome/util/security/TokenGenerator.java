@@ -38,7 +38,6 @@ public class TokenGenerator {
     }
 
     public static SecretKey getSecretKey() {
-        //return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 }

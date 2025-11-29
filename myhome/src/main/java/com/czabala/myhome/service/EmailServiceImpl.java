@@ -57,27 +57,27 @@ public class EmailServiceImpl implements EmailService {
     public void sendConfirmationMessage(String to, String token) {
         String subject = "Confirmación de correo electrónico";
         String confirmationUrl = urlBase + "/auth/confirm?token=" + token;
-        String button = "<center>\n" +
-                " <table align=\"center\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" +
-                "   <tr>\n" +
-                "     <td align=\"center\" style=\"padding: 10px;\">\n" +
-                "       <table border=\"0\" class=\"mobile-button\" cellspacing=\"0\" cellpadding=\"0\">\n" +
-                "         <tr>\n" +
-                "           <td align=\"center\" bgcolor=\"#00ffd9\" style=\"background-color: #00ffd9; margin: auto; max-width: 600px; -webkit-border-radius: 13px; -moz-border-radius: 13px; border-radius: 13px; padding: 15px 20px; \" width=\"100%\">\n" +
-                "           <!--[if mso]>&nbsp;<![endif]-->\n" +
-                "               <a href=\"" + confirmationUrl + "\" target=\"_blank\" style=\"14px; font-family: Verdana, Geneva, sans-serif; color: #000000; font-weight:normal; text-align:center; background-color: #00ffd9; text-decoration: none; border: none; -webkit-border-radius: 13px; -moz-border-radius: 13px; border-radius: 13px; display: inline-block;\">\n" +
-                "                   <span style=\"font-size: 14px; font-family: Verdana, Geneva, sans-serif; color: #000000; font-weight:normal; line-height:1.5em; text-align:center;\">Confirmar cuenta</span>\n" +
-                "             </a>\n" +
-                "           <!--[if mso]>&nbsp;<![endif]-->\n" +
-                "           </td>\n" +
-                "         </tr>\n" +
-                "       </table>\n" +
-                "     </td>\n" +
-                "   </tr>\n" +
-                " </table>\n" +
-                "</center>";
         String text = "Por favor, haz clic en el siguiente enlace para confirmar tu dirección de correo electrónico: \n\n"
-                + button;
+                + confirmationUrl;
+//        String button = "<center>\n" +
+//                " <table align=\"center\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n" +
+//                "   <tr>\n" +
+//                "     <td align=\"center\" style=\"padding: 10px;\">\n" +
+//                "       <table border=\"0\" class=\"mobile-button\" cellspacing=\"0\" cellpadding=\"0\">\n" +
+//                "         <tr>\n" +
+//                "           <td align=\"center\" bgcolor=\"#00ffd9\" style=\"background-color: #00ffd9; margin: auto; max-width: 600px; -webkit-border-radius: 13px; -moz-border-radius: 13px; border-radius: 13px; padding: 15px 20px; \" width=\"100%\">\n" +
+//                "           <!--[if mso]>&nbsp;<![endif]-->\n" +
+//                "               \"<a href=\\\"" + confirmationUrl + "\\\" target=\\\"_blank\\\" style=\\\"font-size: 14px; font-family: Verdana, Geneva, sans-serif; color: #000000; font-weight:normal; text-align:center; background-color: #00ffd9; text-decoration: none; border: none; -webkit-border-radius: 13px; -moz-border-radius: 13px; border-radius: 13px; display: inline-block;\\\">Confirmar cuenta " +
+//                "           <!--[if mso]>&nbsp;<![endif]-->\n" +
+//                "           </td>\n" +
+//                "         </tr>\n" +
+//                "       </table>\n" +
+//                "     </td>\n" +
+//                "   </tr>\n" +
+//                " </table>\n" +
+//                "</center>";
+//        String text = "Por favor, haz clic en el siguiente enlace para confirmar tu dirección de correo electrónico: \n\n"
+//                + button;
 
         MimeMessage message = emailSender.createMimeMessage();
         try {
