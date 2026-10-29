@@ -1,40 +1,34 @@
 # MyHome · Backend
 
-API REST de MyHome desarrollada con Java y Spring Boot. Este repositorio contiene el backend; la interfaz está en [myhome-frontend](https://github.com/carloszabalavilla/myhome-frontend).
+API REST de gestión del hogar con Java17, Spring Boot3.2.4, JPA, Security/JWT, MySQL y correo. Interfaz en [myhome-frontend](https://github.com/carloszabalavilla/myhome-frontend).
 
-## Stack
+## Demo local reproducible
 
-Según `myhome/pom.xml`:
+Desde myhome/, con JDK17 y JAVA_HOME:
 
-- Java 17 y Spring Boot 3.2.4.
-- Spring Web, Spring Data JPA y MySQL.
-- Spring Security y dependencias JWT (JJWT).
-- Bean Validation, ModelMapper y Lombok.
-- Spring Mail y Actuator.
+```powershell
+.\mvnw.cmd clean verify
+java -jar target/myhome-1.1.1.jar --spring.profiles.active=demo
+```
 
-## Organización
+En Linux/macOS: bash ./mvnw clean verify. La API escucha en http://127.0.0.1:8081/api. H2 en memoria se reinicia en cada arranque. Acceso ficticio: demo@example.invalid / DemoOnly123! (usuario normal). Clave JWT aleatoria por proceso; los tokens antiguos dejan de valer al reiniciar. Los correos se capturan en .runtime/mail/, sin SMTP real.
 
-- `myhome/`: proyecto Maven del backend.
-- `myhome/src/main/java/com/czabala/myhome/controller/`: controladores de autenticación, usuarios, familias, tareas y administración.
-- `MySQL/`: recursos de base de datos.
-- `Postman/`: recursos para trabajar con la API.
+Para ejecutar la interfaz y API juntas, consulta [README-local del frontend](https://github.com/carloszabalavilla/myhome-frontend/blob/codex/local-demo/README-local.md). Se mantienen los dos repositorios y se distribuyen en un paquete local conjunto.
 
-## Configuración local
+## Pruebas y comportamiento corregido
 
-Antes de ejecutar, revisar los archivos de configuración de `myhome/src/main/resources/` y adaptar la conexión MySQL y los servicios externos a un entorno local con datos ficticios. No reutilizar credenciales que hayan aparecido anteriormente en este repositorio.
+Surefire ejecuta las pruebas por defecto. La suite comprueba login, rechazo de credenciales/tokens, registro-confirmación-recuperación con correo local, CRUD de tareas y familias, conservación de usuarios al borrar un grupo y serialización sin contraseñas. La conversión a DTO conserva la contraseña de la entidad. La demo no acredita el comportamiento del perfil MySQL.
 
-Las credenciales deben proporcionarse mediante variables de entorno o configuración externa no versionada. No publicar contraseñas, claves JWT, cuentas administrativas ni datos de acceso a otros sistemas en documentación o código.
+## Configuración externa
 
-## Compilación y pruebas
+Sin demo son obligatorias DB_URL, DB_USERNAME, DB_PASSWORD y JWT_SECRET_KEY (Base64 con al menos256 bits). Configura MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, MAIL_AUTH y MAIL_STARTTLS según tu proveedor. MYHOME_FRONTEND_URL se puede configurar como propiedad myhome.frontend-url mediante configuración externa. Provisiona el esquema antes de arrancar (ddl-auto=validate); no se proporcionan aún migraciones productivas. Nunca uses la configuración demo en Internet.
 
-El proyecto utiliza Maven. Revisar la configuración del entorno antes de compilar o ejecutar. Esta actualización de documentación no certifica que la aplicación arranque ni constituye una release validada.
+La autorización actual requiere una revisión por propietario antes de desplegar públicamente. Los módulos de finanzas, nutrición y algunas opciones de miembros no están implementados en esta versión. Esta entrega no constituye una validación de producción ni una actualización completa de dependencias.
 
-**Importante:** el POM actual configura Surefire con `skipTests=true`; una compilación correcta por sí sola no demuestra que se hayan ejecutado las pruebas.
+## Credenciales históricas
 
-## Estado de las versiones
-
-No se ofrece aquí una demo o versión instalable verificada. Antes de preparar una release hay que comprobar la configuración, sustituir cualquier credencial expuesta, ejecutar las pruebas y documentar el arranque con datos de demostración.
+La PR30 retiró accesos del README. Esta continuación externaliza configuración y elimina la cuenta administrativa automática y el ZIP de scaffolding redundante. Retirar los valores no los revoca ni los borra del historial: sustituye DB, SMTP, firma JWT y accesos administrativos históricos si siguen vigentes. No se reutilizan en la demo.
 
 ## Autor
 
-Carlos Zabala · [GitHub](https://github.com/carloszabalavilla) · [LinkedIn](https://www.linkedin.com/in/carloszabalavilla/)
+Carlos Zabala. Se conserva el historial del proyecto y la documentación revisada en la PR30.

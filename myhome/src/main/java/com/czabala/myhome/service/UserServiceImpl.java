@@ -66,7 +66,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(UserDTO userDTO) {
-        return userRepository.save(userDTO.toUser()).toDTO();
+        User user = userRepository.findById(userDTO.getId()).orElseThrow();
+        if (userDTO.getFirstName() != null) user.setFirstName(userDTO.getFirstName());
+        if (userDTO.getLastName() != null) user.setLastName(userDTO.getLastName());
+        if (userDTO.getBirthDate() != null) user.setBirthDate(userDTO.getBirthDate());
+        user.setAddress(userDTO.getAddress());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setNewsletter(userDTO.isNewsletter());
+        return userRepository.save(user).toDTO();
     }
 
     @Override
