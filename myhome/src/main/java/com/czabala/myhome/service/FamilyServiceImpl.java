@@ -1,6 +1,7 @@
 package com.czabala.myhome.service;
 
 import com.czabala.myhome.domain.model.dao.Family;
+import com.czabala.myhome.domain.model.dao.User;
 import com.czabala.myhome.domain.model.dto.FamilyDTO;
 import com.czabala.myhome.domain.repository.FamilyRepository;
 import com.czabala.myhome.domain.repository.UserRepository;
@@ -33,8 +34,16 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public FamilyDTO add(FamilyDTO familyDTO) {
-        return familyRepository.save(familyDTO.toFamily()).toDTO();
+        Family family = familyRepository.save(familyDTO.toFamily());
+        if (familyDTO.getUserId() > 0) {
+            User owner = userRepository.findById(familyDTO.getUserId()).orElseThrow();
+            owner.setFamily(family);
+            owner.setFamilyRole(User.FamilyRole.HEAD);
+            userRepository.save(owner);
+        }
+        return family.toDTO();
 
     }
 
@@ -44,7 +53,14 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public void delete(long id) {
+        Family family = familyRepository.findById(id).orElseThrow();
+        for (User member : family.getUsers()) {
+            member.setFamily(null);
+            member.setFamilyRole(null);
+            userRepository.save(member);
+        }
         familyRepository.deleteById(id);
     }
 

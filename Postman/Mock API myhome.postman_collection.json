@@ -17,7 +17,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{jwt}}",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -118,7 +118,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"name\": \"Carlos\",\r\n  \"surname\": \"Zabala\",\r\n  \"email\": \"czabala@example.com\",\r\n  \"password\": \"password123\",\r\n  \"userRole\": 0,\r\n  \"modules\": null,\r\n  \"confirmationToken\": \"token1234\",\r\n  \"confirmed\": true,\r\n  \"tokenExpirationDate\": \"2024-04-07T10:15:30Z\",\r\n  \"fee\": 0,\r\n  \"monthliesAmount\": 0,\r\n  \"monthliesPaid\": 0,\r\n  \"paymentMethod\": null,\r\n  \"paymentDetails\": null,\r\n  \"paymentToken\": null,\r\n  \"familyRole\": null,\r\n  \"address\": \"123 Main Street\",\r\n  \"birthDate\": \"1990-01-01\",\r\n  \"phoneNumber\": \"1234567890\",\r\n  \"avatar\": null,\r\n  \"newsletter\": 0,\r\n  \"familyGroup\": null\r\n}\r\n",
+              "raw": "{\n  \"name\": \"Carlos\",\n  \"surname\": \"Zabala\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"userRole\": 0,\n  \"modules\": null,\n  \"confirmationToken\": \"token1234\",\n  \"confirmed\": true,\n  \"tokenExpirationDate\": \"2024-04-07T10:15:30Z\",\n  \"fee\": 0,\n  \"monthliesAmount\": 0,\n  \"monthliesPaid\": 0,\n  \"paymentMethod\": null,\n  \"paymentDetails\": null,\n  \"paymentToken\": null,\n  \"familyRole\": null,\n  \"address\": \"123 Main Street\",\n  \"birthDate\": \"1990-01-01\",\n  \"phoneNumber\": \"1234567890\",\n  \"avatar\": null,\n  \"newsletter\": 0,\n  \"familyGroup\": null\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -146,7 +146,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"id\": 13,\r\n  \"surname\": \"Zabala Villanueva\"\r\n}\r\n",
+              "raw": "{\n  \"id\": 13,\n  \"surname\": \"Zabala Villanueva\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -394,7 +394,7 @@
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"superuser\":\"czabaladev\",\r\n    \"newuser\":\"myhomeclient-local\"\r\n}",
+                  "raw": "{\n  \"superuser\": \"czabaladev\",\n  \"newuser\": \"myhomeclient-local\"\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -485,7 +485,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"carloszabalavilla@gmail.com\",\r\n    \"password\": \"rukia1225dev\"\r\n}",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -515,7 +515,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\":\"carloszabalavilla@gmail.com\",\r\n    \"password\":\"rukia1225dev\",\r\n    \"role\":\"ADMIN\"\r\n}",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"ADMIN\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -555,7 +555,7 @@
               "query": [
                 {
                   "key": "token",
-                  "value": "47f11c40d555ee25e908a72fe58e44e434599143ff1d2a2444d28f7f343d511f"
+                  "value": "{{token}}"
                 }
               ]
             }
@@ -640,7 +640,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\":\"carloszabalavilla@gmail.com\",\r\n    \"password\":\"rukia1225dev\",\r\n    \"role\":\"ADMIN\"\r\n}",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\",\n  \"role\": \"ADMIN\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -752,7 +752,7 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{jwt}}",
+        "value": "{{token}}",
         "type": "string"
       }
     ]

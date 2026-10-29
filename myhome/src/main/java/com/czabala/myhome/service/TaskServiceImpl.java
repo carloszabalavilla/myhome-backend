@@ -54,11 +54,14 @@ public class TaskServiceImpl implements TaskService {
         if (taskRepository.findById(taskDTO.getId()).isPresent()) {
             throw new ConflictInDatabaseException("Tarea ya creada");
         }
+        taskDTO.setUser(userRepository.findById(taskDTO.getUser().getId()).orElseThrow());
         return taskRepository.save(taskDTO);
     }
 
     @Override
     public Task update(Task taskDTO) {
+        taskRepository.findById(taskDTO.getId()).orElseThrow();
+        taskDTO.setUser(userRepository.findById(taskDTO.getUser().getId()).orElseThrow());
         return taskRepository.save(taskDTO);
     }
 
