@@ -37,6 +37,10 @@ public class FamilyServiceImpl implements FamilyService {
     @org.springframework.transaction.annotation.Transactional
     public FamilyDTO add(FamilyDTO familyDTO) {
         Family family = familyRepository.save(familyDTO.toFamily());
+        if (familyDTO.getUserId() == 0) {
+            String email = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+            familyDTO.setUserId(userRepository.findByEmail(email).orElseThrow().getId());
+        }
         if (familyDTO.getUserId() > 0) {
             User owner = userRepository.findById(familyDTO.getUserId()).orElseThrow();
             owner.setFamily(family);
@@ -49,7 +53,10 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public FamilyDTO update(FamilyDTO familyGroupDTO) {
-        return familyRepository.save(familyGroupDTO.toFamily()).toDTO();
+        Family family = familyRepository.findById(familyGroupDTO.getId()).orElseThrow();
+        family.setName(familyGroupDTO.getName());
+        family.setDescription(familyGroupDTO.getDescription());
+        return familyRepository.save(family).toDTO();
     }
 
     @Override

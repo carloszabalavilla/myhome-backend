@@ -5,6 +5,7 @@ import com.czabala.myhome.service.FamilyService;
 import com.czabala.myhome.util.mapper.JsonObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Set;
 
@@ -33,6 +34,7 @@ public class FamilyController {
      * @return a ResponseEntity containing a Set of all FamilyGroups
      */
     @GetMapping
+    @PreAuthorize("@resourceAccess.admin()")
     public ResponseEntity<Set<FamilyDTO>> findAllFamilyGroups() {
         return ResponseEntity.ok(familyService.findAll());
     }
@@ -44,6 +46,7 @@ public class FamilyController {
      * @return a ResponseEntity containing the FamilyGroup with the specified id
      */
     @GetMapping("/id")
+    @PreAuthorize("@resourceAccess.family(#id)")
     public ResponseEntity<FamilyDTO> findFamilyGroupById(@RequestParam long id) {
         return ResponseEntity.ok(familyService.findById(id));
     }
@@ -55,6 +58,7 @@ public class FamilyController {
      * @return a ResponseEntity containing the created FamilyGroup
      */
     @PostMapping
+    @PreAuthorize("#familyGroupDTO.id == null && @resourceAccess.newFamily(#familyGroupDTO.userId)")
     public ResponseEntity<FamilyDTO> createFamilyGroup(@RequestBody FamilyDTO familyGroupDTO) {
         return ResponseEntity.ok(familyService.add(familyGroupDTO));
     }
@@ -66,6 +70,7 @@ public class FamilyController {
      * @return a ResponseEntity containing the updated FamilyGroup
      */
     @PutMapping
+    @PreAuthorize("@resourceAccess.familyOwner(#familyGroupDTO.id)")
     public ResponseEntity<FamilyDTO> updateFamilyGroup(@RequestBody FamilyDTO familyGroupDTO) {
         return ResponseEntity.ok(familyService.update(familyGroupDTO));
     }
@@ -77,6 +82,7 @@ public class FamilyController {
      * @return a ResponseEntity containing a message indicating that the family group has been deleted
      */
     @DeleteMapping
+    @PreAuthorize("@resourceAccess.familyOwner(#id)")
     public ResponseEntity<String> deleteFamilyGroup(@RequestParam long id) {
         familyService.delete(id);
         return JsonObject.jsonMsgResponse(200, "Grupo familiar eliminado con exito");

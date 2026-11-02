@@ -23,7 +23,9 @@ Surefire ejecuta las pruebas por defecto. La suite comprueba login, rechazo de c
 
 Sin demo son obligatorias DB_URL, DB_USERNAME, DB_PASSWORD y JWT_SECRET_KEY (Base64 con al menos256 bits). Configura MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD, MAIL_AUTH y MAIL_STARTTLS según tu proveedor. MYHOME_FRONTEND_URL se puede configurar como propiedad myhome.frontend-url mediante configuración externa. Provisiona el esquema antes de arrancar (ddl-auto=validate); no se proporcionan aún migraciones productivas. Nunca uses la configuración demo en Internet.
 
-La autorización actual requiere una revisión por propietario antes de desplegar públicamente. Los módulos de finanzas, nutrición y algunas opciones de miembros no están implementados en esta versión. Esta entrega no constituye una validación de producción ni una actualización completa de dependencias.
+La API comprueba la propiedad de tareas, grupos y datos de usuario antes de ejecutar sus operaciones. Los listados globales quedan restringidos a administración. OwnershipApiTest prueba accesos cruzados entre dos usuarios y rechaza lectura, edición, borrado y reasignación ajenos. Las tareas validan nombre, fecha y orden de horas; el servidor fija su autor y conserva la fecha de creación al editar. La suite completa ejecuta 30 pruebas.
+
+Los módulos de finanzas, nutrición y algunas opciones de miembros no están implementados en esta versión. Antes de producción siguen pendientes una revisión completa de seguridad (incluido el ciclo de tokens), configuración MySQL, migraciones y dependencias. Esta entrega solo verifica la demo local.
 
 ## Credenciales históricas
 

@@ -25,6 +25,7 @@ import static org.springframework.http.HttpMethod.DELETE;
  * SecurityConfig is a configuration class that sets up the Spring Security filter chain.
  */
 @EnableWebSecurity
+@org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 @Component
 public class SecurityConfig {
     @Autowired

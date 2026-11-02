@@ -20,6 +20,11 @@ import java.util.Objects;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
+        return JsonObject.jsonMsgResponse(403, "No tienes permiso para acceder a este recurso");
+    }
+
     @ExceptionHandler(InvalidFieldException.class)
     public ResponseEntity<String> handleInvalidFieldException(InvalidFieldException ex) {
         return JsonObject.jsonMsgResponse(400, ex.getMessage());
@@ -38,7 +43,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException ex) {
+    public ResponseEntity<String> handleExpiredJwtException(JwtException ex) {
         return JsonObject.jsonMsgResponse(401, ex.getMessage());
     }
 
