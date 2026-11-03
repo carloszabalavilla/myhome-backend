@@ -3,6 +3,7 @@ package com.czabala.myhome.domain.model.dao;
 import com.czabala.myhome.domain.model.dto.UserDTO;
 import com.czabala.myhome.util.security.Role;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
     @Column(nullable = false)
     private String firstName;
@@ -75,8 +77,10 @@ public class User implements UserDetails {
     }
 
     public UserDTO toDTO() {
-        this.password = null;
-        return new ModelMapper().map(this, UserDTO.class);
+        UserDTO dto = new ModelMapper().map(this, UserDTO.class);
+        dto.setPassword(null);
+        dto.setFamilyGroup(family == null ? null : family.getId());
+        return dto;
     }
 
     @Override

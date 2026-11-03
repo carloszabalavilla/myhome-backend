@@ -1,11 +1,2 @@
--- Create the user
-CREATE USER 'czabaladev' IDENTIFIED BY 'rukia1225dev';
-
--- Create the schema
-CREATE SCHEMA myhome;
-
--- Grant privileges to the user on the schema
-GRANT ALL PRIVILEGES ON myhome.* TO 'czabaladev';
-
--- Flush privileges to apply changes
-FLUSH PRIVILEGES;
+-- Provision the application user outside source control. Supply credentials through environment variables.
+CREATE DATABASE IF NOT EXISTS myhome CHARACTER SET utf8mb4;

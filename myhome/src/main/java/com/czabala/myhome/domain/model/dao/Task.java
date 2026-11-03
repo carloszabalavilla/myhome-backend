@@ -2,6 +2,7 @@ package com.czabala.myhome.domain.model.dao;
 
 import com.czabala.myhome.domain.model.dto.TaskDTO;
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
 
@@ -34,6 +35,7 @@ public class Task {
     @Column(nullable = false)
     private long createdBy;
     @ManyToOne
+    @JsonIgnoreProperties({"tasks", "family"})
     private User user;
 
     public TaskDTO toDTO() {

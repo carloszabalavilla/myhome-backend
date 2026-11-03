@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.stream.Collectors;
 
 /**
@@ -39,9 +41,11 @@ public class JsonObject {
      * @return a JSON string representing the map
      */
     public static String jsonMePlease(Map<String, String> map) {
-        return map.entrySet().stream()
-                .map(entry -> "\"" + entry.getKey() + "\": \"" + entry.getValue() + "\"")
-                .collect(Collectors.joining(",", "{", "}"));
+        try {
+            return new ObjectMapper().writeValueAsString(map);
+        } catch (JsonProcessingException ex) {
+            throw new IllegalArgumentException("Cannot serialize response", ex);
+        }
     }
 
     /**
@@ -62,6 +66,6 @@ public class JsonObject {
      */
     @Override
     public String toString() {
-        return "{\"" + jsonKey + "\": \"" + jsonValue + "\"}";
+        return jsonMePlease(Map.of(jsonKey, jsonValue));
     }
 }

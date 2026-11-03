@@ -25,7 +25,7 @@ public class Family {
     private String name;
     @Column
     private String description;
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family")
     @ToString.Exclude
     private Set<User> users;
 

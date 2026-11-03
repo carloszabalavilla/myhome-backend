@@ -4,12 +4,21 @@ import com.czabala.myhome.service.JwtService;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.UUID;
 
 @Component
 public class EmailSender {
 
     private final JavaMailSender emailSender;
-    private final String urlBase = "http://localhost:3000";
+    @Value("${myhome.frontend-url:http://localhost:3000}")
+    private String urlBase;
+    @Value("${myhome.mail.local-directory:}")
+    private String localDirectory;
     private final JwtService jwtService;
 
     public EmailSender(JavaMailSender emailSender, JwtService jwtService) {
@@ -27,7 +36,7 @@ public class EmailSender {
         message.setTo(email);
         message.setSubject(subject);
         message.setText(text);
-        emailSender.send(message);
+        deliver(message);
     }
 
     public void sendChangePasswordMessage(String email, String token) {
@@ -41,6 +50,15 @@ public class EmailSender {
         message.setTo(email);
         message.setSubject(subject);
         message.setText(text);
-        emailSender.send(message);
+        deliver(message);
+    }
+    private void deliver(SimpleMailMessage message) {
+        if (localDirectory == null || localDirectory.isBlank()) { emailSender.send(message); return; }
+        try {
+            Path directory = Path.of(localDirectory);
+            Files.createDirectories(directory);
+            Files.writeString(directory.resolve(UUID.randomUUID() + ".txt"),
+                    "To: " + String.join(", ", message.getTo()) + "\nSubject: " + message.getSubject() + "\n\n" + message.getText());
+        } catch (IOException ex) { throw new UncheckedIOException("Cannot capture demo email", ex); }
     }
 }

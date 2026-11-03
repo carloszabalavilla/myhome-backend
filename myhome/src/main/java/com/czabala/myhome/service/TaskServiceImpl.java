@@ -51,20 +51,39 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task add(Task taskDTO) {
+        validate(taskDTO);
         if (taskRepository.findById(taskDTO.getId()).isPresent()) {
             throw new ConflictInDatabaseException("Tarea ya creada");
         }
+        taskDTO.setUser(userRepository.findById(taskDTO.getUser().getId()).orElseThrow());
+        taskDTO.setCreatedBy(taskDTO.getUser().getId());
+        taskDTO.setCreatedAt(java.sql.Date.valueOf(java.time.LocalDate.now()));
         return taskRepository.save(taskDTO);
     }
 
     @Override
     public Task update(Task taskDTO) {
+        validate(taskDTO);
+        Task stored = taskRepository.findById(taskDTO.getId()).orElseThrow();
+        taskDTO.setCreatedBy(stored.getCreatedBy());
+        taskDTO.setCreatedAt(stored.getCreatedAt());
+        taskDTO.setUser(userRepository.findById(taskDTO.getUser().getId()).orElseThrow());
         return taskRepository.save(taskDTO);
     }
 
     @Override
     public void delete(long id) {
         taskRepository.deleteById(id);
+    }
+
+    private void validate(Task task) {
+        if (task.getName() == null || task.getName().isBlank() || task.getDate() == null
+                || task.getStartHour() == null || task.getEndHour() == null
+                || !task.getEndHour().after(task.getStartHour())) {
+            throw new com.czabala.myhome.util.exception.InvalidFieldException("Indica un nombre, una fecha y una hora final posterior a la inicial");
+        }
+        task.setName(task.getName().trim());
+        if (task.getColor() == null || !task.getColor().matches("#[0-9a-fA-F]{6}")) task.setColor("#287164");
     }
 
     private Set<TaskDTO> toTaskDTO(Iterable<Task> tasks) {

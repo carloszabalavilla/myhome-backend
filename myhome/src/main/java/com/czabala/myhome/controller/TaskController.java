@@ -8,6 +8,7 @@ import com.czabala.myhome.service.TaskService;
 import com.czabala.myhome.util.mapper.JsonObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Set;
 
@@ -36,6 +37,7 @@ public class TaskController {
      * @return a ResponseEntity containing a Set of all Tasks
      */
     @GetMapping
+    @PreAuthorize("@resourceAccess.admin()")
     public ResponseEntity<Set<Task>> findAllTasks() {
         return ResponseEntity.ok(taskService.findAll());
     }
@@ -47,6 +49,7 @@ public class TaskController {
      * @return a ResponseEntity containing the Task with the specified id
      */
     @GetMapping("/id")
+    @PreAuthorize("@resourceAccess.task(#id)")
     public ResponseEntity<Task> findTaskById(@RequestParam long id) {
         return ResponseEntity.ok(taskService.findById(id));
     }
@@ -58,6 +61,7 @@ public class TaskController {
      * @return a ResponseEntity containing a Set of Tasks with the specified user
      */
     @GetMapping("/user")
+    @PreAuthorize("@resourceAccess.user(#id)")
     public ResponseEntity<Set<Task>> findTaskByUser(@RequestParam long id) {
         return ResponseEntity.ok(taskService.findByUser(id));
     }
@@ -69,6 +73,7 @@ public class TaskController {
      * @return a ResponseEntity containing a Set of Tasks with the specified family group
      */
     @GetMapping("/family-group")
+    @PreAuthorize("@resourceAccess.family(#family.id)")
     public ResponseEntity<Set<Task>> findTaskByFamilyGroup(@RequestParam Family family) {
         return ResponseEntity.ok(taskService.findByFamily(family));
     }
@@ -80,6 +85,7 @@ public class TaskController {
      * @return a ResponseEntity containing the created Task
      */
     @PostMapping
+    @PreAuthorize("#taskDTO.id == 0 && @resourceAccess.user(#taskDTO.userId)")
     public ResponseEntity<Task> createTask(@RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(taskService.add(taskDTO.toTask()));
     }
@@ -91,6 +97,7 @@ public class TaskController {
      * @return a ResponseEntity containing the updated Task
      */
     @PutMapping
+    @PreAuthorize("@resourceAccess.task(#taskDTO.id) && @resourceAccess.user(#taskDTO.userId)")
     public ResponseEntity<Task> updateTask(@RequestBody TaskDTO taskDTO) {
         return ResponseEntity.ok(taskService.update(taskDTO.toTask()));
     }
@@ -102,6 +109,7 @@ public class TaskController {
      * @return a ResponseEntity containing a message indicating that the task has been deleted
      */
     @DeleteMapping
+    @PreAuthorize("@resourceAccess.task(#id)")
     public ResponseEntity<String> deleteTask(@RequestParam(value = "id") long id) {
         taskService.delete(id);
         return JsonObject.jsonMsgResponse(200, "Tarea eliminada exitosamente");

@@ -12,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JsonObjectTest {
 
     @Test
-    void jsonMePlease_shouldReturnJsonString_whenMapIsNotEmpty() {
+    void jsonMePlease_shouldReturnJsonString_whenMapIsNotEmpty() throws Exception {
         Map<String, String> jsonMap = of("key1", "value1", "key2", "value2", "key3", "value3");
-        assertEquals("{\"key1\": \"value1\",\"key2\": \"value2\",\"key3\": \"value3\"}", new JsonObject().jsonMePlease(jsonMap));
+        assertEquals(jsonMap, new com.fasterxml.jackson.databind.ObjectMapper().readValue(JsonObject.jsonMePlease(jsonMap), Map.class));
     }
 
     @Test
@@ -27,16 +27,16 @@ class JsonObjectTest {
     void jsonMsgResponse_shouldReturnResponseEntity_withStatusAndMessage() {
         ResponseEntity<?> responseEntity = JsonObject.jsonMsgResponse(200, "message");
         assertEquals(200, responseEntity.getStatusCodeValue());
-        assertEquals("{\"message\": \"message\"}", responseEntity.getBody());
+        assertEquals("{\"message\":\"message\"}", responseEntity.getBody());
     }
 
     @Test
     void toString_shouldReturnJsonString_withKeyAndValue() {
-        assertEquals("{\"key\": \"value\"}", new JsonObject("key", "value").toString());
+        assertEquals("{\"key\":\"value\"}", new JsonObject("key", "value").toString());
     }
 
     @Test
     void toString_shouldReturnJsonString_withMessageAndValue_whenOnlyValueIsProvided() {
-        assertEquals("{\"message\": \"value\"}", new JsonObject("value").toString());
+        assertEquals("{\"message\":\"value\"}", new JsonObject("value").toString());
     }
 }

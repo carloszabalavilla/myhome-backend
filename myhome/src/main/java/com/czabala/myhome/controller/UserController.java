@@ -6,6 +6,7 @@ import com.czabala.myhome.util.mapper.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Set;
 
@@ -26,6 +27,7 @@ public class UserController {
      * @return a ResponseEntity containing a Set of all Users
      */
     @GetMapping
+    @PreAuthorize("@resourceAccess.admin()")
     public ResponseEntity<Set<UserDTO>> findAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
@@ -37,6 +39,7 @@ public class UserController {
      * @return a ResponseEntity containing the User with the specified id
      */
     @GetMapping("/id")
+    @PreAuthorize("@resourceAccess.user(#id)")
     public ResponseEntity<UserDTO> findUserById(@RequestParam long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
@@ -48,6 +51,7 @@ public class UserController {
      * @return a ResponseEntity containing the User with the specified email
      */
     @GetMapping("/email")
+    @PreAuthorize("@resourceAccess.email(#email)")
     public ResponseEntity<UserDTO> findUserByEmail(@RequestParam String email) {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
@@ -59,6 +63,7 @@ public class UserController {
      * @return a ResponseEntity containing a Set of Users with the specified role
      */
     @GetMapping("/role")
+    @PreAuthorize("@resourceAccess.admin()")
     public ResponseEntity<Set<UserDTO>> findUserByRole(@RequestParam String role) {
         return ResponseEntity.ok(userService.findByRole(role));
     }
@@ -70,6 +75,7 @@ public class UserController {
      * @return a ResponseEntity containing the created User
      */
     @PostMapping()
+    @PreAuthorize("@resourceAccess.admin()")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.add(userDTO));
     }
@@ -81,6 +87,7 @@ public class UserController {
      * @return a ResponseEntity containing the updated User
      */
     @PutMapping
+    @PreAuthorize("@resourceAccess.user(#userDTO.id)")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.update(userDTO));
     }
@@ -92,6 +99,7 @@ public class UserController {
      * @return a ResponseEntity containing a message indicating that the user has been deleted
      */
     @DeleteMapping
+    @PreAuthorize("@resourceAccess.user(#id)")
     public ResponseEntity<String> deleteUser(@RequestParam(value = "id") long id) {
         userService.delete(id);
         return JsonObject.jsonMsgResponse(200, "Usuario eliminado");
